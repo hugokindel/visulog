@@ -40,11 +40,11 @@ Visulog contains the following modules:
 
 1. clone the repository
     ```
-    git clone git@gaufre.informatique.univ-paris-diderot.fr:adegorre/visulog.git
+    git clone git@gaufre.informatique.univ-paris-diderot.fr:hugokindel/visulog.git
     ```
    or
     ```
-    git clone https://gaufre.informatique.univ-paris-diderot.fr/adegorre/visulog.git
+    git clone https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog.git
     ```
 2. Enter the project folder
     ```
