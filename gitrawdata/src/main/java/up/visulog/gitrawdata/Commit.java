@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class that represent a git commit with data such as id, date, etc
+ */
 public class Commit {
     // FIXME: (some of) these fields could have more specialized types than String
     public final String id;
@@ -17,6 +20,15 @@ public class Commit {
     public final String description;
     public final String mergedFrom;
 
+    /**
+     *  Create a new Commit
+     *
+     * @param id            ID of the commit
+     * @param author        Commit's author (mail)
+     * @param date          Commit's date
+     * @param description   Commit's message
+     * @param mergedFrom    Branch the commit is mergedFrom
+     */
     public Commit(String id, String author, String date, String description, String mergedFrom) {
         this.id = id;
         this.author = author;
@@ -25,6 +37,13 @@ public class Commit {
         this.mergedFrom = mergedFrom;
     }
 
+    /**
+     *  Generate a List of Commit from the 'git.log' file
+     *
+     * @param gitPath   Path to the 'git.log' file
+     * @return          a list of Commit
+     * @throws          IOException is can't read the git.log file
+     */
     // TODO: factor this out (similar code will have to be used for all git commands)
     public static List<Commit> parseLogFromCommand(Path gitPath) {
         ProcessBuilder builder =
@@ -40,6 +59,11 @@ public class Commit {
         return parseLog(reader);
     }
 
+    /**
+     *      Read a Buffer and convert it into a List of Commit
+     *
+     * @return a List of Commit
+     */
     public static List<Commit> parseLog(BufferedReader reader) {
         var result = new ArrayList<Commit>();
         Optional<Commit> commit = parseCommit(reader);
@@ -98,7 +122,9 @@ public class Commit {
         return Optional.empty(); // this is supposed to be unreachable, as parseError should never return
     }
 
-    // Helper function for generating parsing exceptions. This function *always* quits on an exception. It *never* returns.
+    /**
+     * Helper function for generating parsing exceptions. This function *always* quits on an exception. It *never* returns.
+     */
     private static void parseError() {
         throw new RuntimeException("Wrong commit format.");
     }
