@@ -38,9 +38,9 @@ public class Commit {
     }
 
     /**
-     *  Generate a List of Commit from the 'git.log' file
+     *  Generate a List of Commit from the git lo command
      *
-     * @param gitPath   Path to the 'git.log' file
+     * @param gitPath   Command used (git log for the moment)
      * @return          a list of Commit
      * @throws          IOException is can't read the git.log file
      */
