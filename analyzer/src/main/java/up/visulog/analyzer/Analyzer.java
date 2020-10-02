@@ -7,6 +7,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -38,15 +42,29 @@ public class Analyzer {
     */
     public AnalyzerResult computeResults() {
         List<AnalyzerPlugin> plugins = new ArrayList<>();
-        for (var pluginConfigEntry: config.getPluginConfigs().entrySet()) {
-            var pluginName = pluginConfigEntry.getKey();
-            var pluginConfig = pluginConfigEntry.getValue();
-            var plugin = makePlugin(pluginName, pluginConfig);
+
+        for (var pluginConfigEntry : config.getPluginConfigs().entrySet()) {
+            String pluginName = pluginConfigEntry.getKey();
+            PluginConfig pluginConfig = pluginConfigEntry.getValue();
+            Optional<AnalyzerPlugin> plugin = makePlugin(pluginName, pluginConfig);
             plugin.ifPresent(plugins::add);
         }
 
-        // TODO: try running them in parallel
-        for (var plugin: plugins) plugin.run();
+        // TODO: Option to specify the number of threads to use as a maximum.
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        List<Callable<Object>> tasks = new ArrayList<>(plugins.size());
+
+        for (AnalyzerPlugin plugin : plugins) {
+            tasks.add(Executors.callable(plugin::run));
+        }
+
+        try {
+            executorService.invokeAll(tasks);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            executorService.shutdown();
+        }
 
         // Store the results together in an AnalyzerResult instance and return it.
         return new AnalyzerResult(plugins.stream().map(AnalyzerPlugin::getResult).collect(Collectors.toList()));
@@ -66,8 +84,8 @@ public class Analyzer {
             return Optional.of(classType.getDeclaredConstructor(Configuration.class).newInstance(config));
         } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException |
                  IllegalAccessException | InvocationTargetException e) {
+            System.out.println("Unknown plugin: '" + pluginName + "'!");
             return Optional.empty();
         }
     }
-
 }
