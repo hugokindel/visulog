@@ -10,4 +10,4 @@
 # JetBrains (IntelliJ)
 # Just ignore any IDE settings for now.
 # See: https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
-.idea/
+**/.idea/
