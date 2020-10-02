@@ -2,6 +2,8 @@ package up.visulog.analyzer;
 
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,11 +44,11 @@ public class Analyzer {
             var plugin = makePlugin(pluginName, pluginConfig);
             plugin.ifPresent(plugins::add);
         }
-        // run all the plugins
+
         // TODO: try running them in parallel
         for (var plugin: plugins) plugin.run();
 
-        // store the results together in an AnalyzerResult instance and return it
+        // Store the results together in an AnalyzerResult instance and return it.
         return new AnalyzerResult(plugins.stream().map(AnalyzerPlugin::getResult).collect(Collectors.toList()));
     }
 
@@ -58,10 +60,13 @@ public class Analyzer {
     * @return a plugin only if it exists.
     */
     private Optional<AnalyzerPlugin> makePlugin(String pluginName, PluginConfig pluginConfig) {
-    	// TODO: find a way so that the list of plugins is not hardcoded in this factory
-        switch (pluginName) {
-            case "countCommits" : return Optional.of(new CountCommitsPerAuthorPlugin(config));
-            default : return Optional.empty();
+        try {
+            String className = (pluginName.contains(".") ? pluginName : "up.visulog.analyzer.plugin." + pluginName);
+            Class<? extends AnalyzerPlugin> classType = Class.forName(className).asSubclass(AnalyzerPlugin.class);
+            return Optional.of(classType.getDeclaredConstructor(Configuration.class).newInstance(config));
+        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException | InvocationTargetException e) {
+            return Optional.empty();
         }
     }
 

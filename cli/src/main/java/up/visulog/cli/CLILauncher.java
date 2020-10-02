@@ -59,8 +59,7 @@ public class CLILauncher {
                             /** create a plugin based on the option */
                             // TODO: parse argument and make an instance of PluginConfig
                             // Let's just trivially do this, before the TODO is fixed:
-                            if (pValue.equals("countCommits")) plugins.put("countCommits", new PluginConfig() {
-                            });
+                            plugins.put(pValue, new PluginConfig() {});
 
                             break;
                         case "--loadConfigFile":
@@ -73,14 +72,12 @@ public class CLILauncher {
                             return Optional.empty();
                     }
                 }
-
             } else {
                 gitPath = FileSystems.getDefault().getPath(arg);
             }
-
         }
-        return Optional.of(new Configuration(gitPath, plugins));
 
+        return Optional.of(new Configuration(gitPath, plugins));
     }
 
     /**
