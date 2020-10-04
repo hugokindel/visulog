@@ -86,7 +86,11 @@ public class CLILauncher {
      */
     private static void displayHelpAndExit() {
         System.out.println("Wrong command...");
-        //TODO: print the list of options and their syntax
+        /**TODO: print the list of options and their syntax
+         * Temporary solution
+        */
+        System.out.println("Options :");
+        System.out.println("- count the commits of every users. Syntax : countCommits")
         System.exit(0);
     }
 }
