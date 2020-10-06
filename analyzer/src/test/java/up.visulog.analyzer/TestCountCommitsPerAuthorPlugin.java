@@ -18,7 +18,7 @@ public class TestCountCommitsPerAuthorPlugin {
         var entries = 20;
 
         for (int i = 0; i < entries; i++) {
-            log.add(new CommitBuilder("").setAuthor(authors[i % 3]).createCommit());
+            log.add(new CommitBuilder(-1).setAuthor(authors[i % 3]).createCommit());
         }
 
         var res = CountCommitsPerAuthorPlugin.processLog(log);

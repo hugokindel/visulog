@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +16,9 @@ import java.util.Optional;
  * Class that represent a git commit with data such as id, date, etc
  */
 public class Commit {
-    // FIXME: (some of) these fields could have more specialized types than String
-    public final String id;
-    public final String date;
+
+    public final int id;
+    public final Date date;
     public final String author;
     public final String description;
     public final String mergedFrom;
@@ -29,7 +32,7 @@ public class Commit {
      * @param description   Commit's message
      * @param mergedFrom    Branch the commit is mergedFrom
      */
-    public Commit(String id, String author, String date, String description, String mergedFrom) {
+    public Commit(int id, String author, Date date, String description, String mergedFrom) {
         this.id = id;
         this.author = author;
         this.date = date;
@@ -85,7 +88,7 @@ public class Commit {
             if (line == null) return Optional.empty(); // if no line can be read, we are done reading the buffer
             var idChunks = line.split(" ");
             if (!idChunks[0].equals("commit")) parseError();
-            var builder = new CommitBuilder(idChunks[1]);
+            var builder = new CommitBuilder(Integer.parseInt(idChunks[1]));
 
             line = input.readLine();
             while (!line.isEmpty()) {
@@ -100,7 +103,7 @@ public class Commit {
                         builder.setMergedFrom(fieldContent);
                         break;
                     case "Date":
-                        builder.setDate(fieldContent);
+                        builder.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(fieldContent));
                         break;
                     default: // TODO: warn the user that some field was ignored
                 }
@@ -116,7 +119,7 @@ public class Commit {
                     .reduce("", (accumulator, currentLine) -> accumulator + currentLine); // concatenate everything
             builder.setDescription(description);
             return Optional.of(builder.createCommit());
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             parseError();
         }
         return Optional.empty(); // this is supposed to be unreachable, as parseError should never return
