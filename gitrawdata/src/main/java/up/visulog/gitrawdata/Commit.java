@@ -44,25 +44,35 @@ public class Commit {
      * @return          a list of Commit
      * @throws          IOException is can't read the git.log file
      */
-    // TODO: factor this out (similar code will have to be used for all git commands)
     public static List<Commit> parseLogFromCommand(Path gitPath) {
-        ProcessBuilder builder =
-                new ProcessBuilder("git", "log").directory(gitPath.toFile());
+        return parseLog(parseCommand(gitPath, "git", "log"));
+    }
+
+    /**
+     * Create a buffer from any git commands
+     *
+     * @param path      Path to the git.log file (if needed)
+     * @param command   Used git command
+     * @return          A BufferedReader of the 'command'
+     * @throws          RuntimeException if the command can't be run
+     */
+    public static BufferedReader parseCommand(Path path, String... command) {
+        ProcessBuilder builder = new ProcessBuilder(command).directory(path.toFile());
+
         Process process;
         try {
             process = builder.start();
         } catch (IOException e) {
-            throw new RuntimeException("Error running \"git log\".", e);
+            throw new RuntimeException("Error running \"" + command + "\"", e);
         }
         InputStream is = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        return parseLog(reader);
+        return new BufferedReader(new InputStreamReader(is));
     }
 
     /**
-     *      Read a Buffer and convert it into a List of Commit
-     *
-     * @return a List of Commit
+     * Read a Buffer and convert it into a List of Commit
+     * @param reader    the BufferedReader if the git command
+     * @return          a List of Commit
      */
     public static List<Commit> parseLog(BufferedReader reader) {
         var result = new ArrayList<Commit>();

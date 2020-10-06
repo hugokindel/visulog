@@ -55,11 +55,6 @@ public class CommitBuilder {
 
     /**
      * Method to use to create a new commit form :
-     * @param id                 of the commit
-     * @param author             of the commit
-     * @param date               of the commit
-     * @param description        (message of the commit)
-     * @param mergedFrom         the branch the commit is mergedFrom
      * @return a Commit
      */
     public Commit createCommit() {
