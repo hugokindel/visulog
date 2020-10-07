@@ -1,19 +1,21 @@
 package up.visulog.gitrawdata;
 
+import java.util.Date;
+
 /**
  * Class that creates the Commit (Commit only represent it as an object)
  */
 public class CommitBuilder {
-    private final String id;
+    private final int id;
     private String author;
-    private String date;
+    private Date date;
     private String description;
     private String mergedFrom;
 
     /**
      * Constructor is needed since id is final
      */
-    public CommitBuilder(String id) {
+    public CommitBuilder(int id) {
         this.id = id;
     }
 
@@ -30,7 +32,7 @@ public class CommitBuilder {
      * Set the date field (date of the commit)
      * @param date
      */
-    public CommitBuilder setDate(String date) {
+    public CommitBuilder setDate(Date date) {
         this.date = date;
         return this;
     }
@@ -55,11 +57,6 @@ public class CommitBuilder {
 
     /**
      * Method to use to create a new commit form :
-     * @param id                 of the commit
-     * @param author             of the commit
-     * @param date               of the commit
-     * @param description        (message of the commit)
-     * @param mergedFrom         the branch the commit is mergedFrom
      * @return a Commit
      */
     public Commit createCommit() {
