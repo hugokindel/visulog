@@ -90,7 +90,7 @@ public class CLILauncher {
          * Temporary solution
         */
         System.out.println("Options :");
-        System.out.println("- count the commits of every users. Syntax : countCommits")
+        System.out.println("- count the commits of every users. Syntax : countCommits");
         System.exit(0);
     }
 }
