@@ -8,6 +8,7 @@ import up.visulog.cli.util.Parser;
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
 
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -164,7 +165,29 @@ public class Visulog {
         for (String line : Visulog.class.getAnnotation(Command.class).description()) {
             System.out.println(line);
         }
+
         System.out.println("Options:");
-        // TODO: Display list of options with their description and usage informations.
+        for (Field field : Visulog.class.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Option.class)) {
+                Option option = field.getAnnotation(Option.class);
+
+                for (String name : option.names()) {
+                    System.out.print(name + " ");
+                }
+                System.out.println(":");
+
+                for (String line : option.description()) {
+                    System.out.println(line);
+                }
+                if(option.usage().length() > 0) {
+                    System.out.println(option.usage());
+                    System.out.println();
+                } else {
+                    System.out.println();
+                }
+            }
+
+        }
+        // DO: Display list of options with their description and usage informations.
     }
 }
