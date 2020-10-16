@@ -13,10 +13,13 @@ public class TestVisulog {
      */
     @Test
     public void testArgumentParser() {
-        var config1 = new Visulog().makeConfigFromCommandLineArgs(new String[]{".", "--addPlugin=countCommits"});
+        var config1 = new Visulog().makeConfigFromCommandLineArgs(new String[]{".", "--plugins=countCommits"});
         assertTrue(config1.isPresent());
 
         var config2 = new Visulog().makeConfigFromCommandLineArgs(new String[] {"--nonExistingOption"});
         assertFalse(config2.isPresent());
+
+        var config3 = new Visulog().makeConfigFromCommandLineArgs(new String[]{".", "-h"});
+        assertFalse(config3.isPresent());
     }
 }
