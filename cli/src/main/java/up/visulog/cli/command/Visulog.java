@@ -6,13 +6,11 @@ import up.visulog.cli.annotation.Command;
 import up.visulog.cli.annotation.Option;
 import up.visulog.cli.util.Parser;
 import up.visulog.config.Configuration;
-import up.visulog.config.PluginConfig;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -79,7 +77,6 @@ public class Visulog {
      */
     Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
         Path gitPath = FileSystems.getDefault().getPath(".");
-        HashMap<String, PluginConfig> pluginsMap = new HashMap<>();
 
         for (String arg : args) {
             if (arg.startsWith("-")) {
@@ -131,10 +128,6 @@ public class Visulog {
             displayVersion();
         }
 
-        for (String plugin : plugins) {
-            pluginsMap.put(plugin, new PluginConfig() {});
-        }
-
         if (!loadConfig.isEmpty()) {
             // TODO: Load config from file at path.
             // TODO: Add possibility to load multiple config files at once, load config path should become an array.
@@ -148,7 +141,7 @@ public class Visulog {
             return Optional.empty();
         }
 
-        return Optional.of(new Configuration(gitPath, pluginsMap));
+        return Optional.of(new Configuration(gitPath, Arrays.asList(plugins)));
     }
 
     /** print an error message to indicate that one of the option asked for is unknown. */
