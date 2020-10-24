@@ -16,21 +16,29 @@ import java.util.Optional;
  * Class that represent a git commit with data such as id, date, etc
  */
 public class Commit {
-
+	/** ID of the commit. */
     public final int id;
+
+    /** Date of creation of the commit. */
     public final Date date;
+
+    /** Author of the commit. */
     public final String author;
+
+    /** Written description of the commit. */
     public final String description;
+
+    /** Name of the branch which the commit is merged from. */
     public final String mergedFrom;
 
     /**
      *  Create a new Commit
      *
-     * @param id            ID of the commit
-     * @param author        Commit's author (mail)
-     * @param date          Commit's date
-     * @param description   Commit's message
-     * @param mergedFrom    Branch the commit is mergedFrom
+     * @param id ID of the commit
+     * @param author Commit's author (mail)
+     * @param date Commit's date
+     * @param description Commit's message
+     * @param mergedFrom Branch the commit is mergedFrom
      */
     public Commit(int id, String author, Date date, String description, String mergedFrom) {
         this.id = id;
@@ -43,21 +51,21 @@ public class Commit {
     /**
      *  Generate a List of Commit from the git lo command
      *
-     * @param gitPath   Command used (git log for the moment)
-     * @return          a list of Commit
-     * @throws          IOException is can't read the git.log file
+     * @param gitPath command used (git log for the moment)
+     * @return a list of Commit
+     * @throws IOException is can't read the git.log file
      */
     public static List<Commit> parseLogFromCommand(Path gitPath) {
         return parseLog(parseCommand(gitPath, "git", "log"));
     }
 
     /**
-     * Create a buffer from any git commands
+     * Create a buffer from any git commands.
      *
-     * @param path      Path to the git.log file (if needed)
-     * @param command   Used git command
-     * @return          A BufferedReader of the 'command'
-     * @throws          RuntimeException if the command can't be run
+     * @param path path to the git.log file (if needed).
+     * @param command used git command.
+     * @return a BufferedReader of the 'command'.
+     * @throws RuntimeException if the command can't be run
      */
     public static BufferedReader parseCommand(Path path, String... command) {
         ProcessBuilder builder = new ProcessBuilder(command).directory(path.toFile());
@@ -73,9 +81,9 @@ public class Commit {
     }
 
     /**
-     * Read a Buffer and convert it into a List of Commit
-     * @param reader    the BufferedReader if the git command
-     * @return          a List of Commit
+     * Read a buffer and convert it into a list of commit.
+     * @param reader the BufferedReader if the git command.
+     * @return a list of commits.
      */
     public static List<Commit> parseLog(BufferedReader reader) {
         var result = new ArrayList<Commit>();
