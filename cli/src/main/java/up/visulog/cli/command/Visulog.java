@@ -166,32 +166,39 @@ public class Visulog {
     private static void displayHelp() {
         // TODO: Usage could directly display a simple list of options (similar to how git does it).
         System.out.println("usage: " + Visulog.class.getAnnotation(Command.class).name() + " <path> [options...]");
+
+        System.out.println();
+
         for (String line : Visulog.class.getAnnotation(Command.class).description()) {
             System.out.println(line);
         }
+
+        System.out.println();
 
         System.out.println("Options:");
         for (Field field : Visulog.class.getDeclaredFields()) {
             if (field.isAnnotationPresent(Option.class)) {
                 Option option = field.getAnnotation(Option.class);
+                int numberOfNames = option.names().length;
 
-                for (String name : option.names()) {
-                    System.out.print(name + " ");
+                System.out.print(" \t");
+
+                for (int i = 0; i < numberOfNames; i++) {
+                    System.out.print(option.names()[i] + (i == numberOfNames - 1 ? "" : ", "));
                 }
-                System.out.println(":");
+
+                if(!option.usage().isEmpty()) {
+                    System.out.print("=" + option.usage());
+                }
+
+                System.out.println();
 
                 for (String line : option.description()) {
+                    System.out.print(" \t\t");
                     System.out.println(line);
-                }
-                if(option.usage().length() > 0) {
-                    System.out.println(option.usage());
-                    System.out.println();
-                } else {
-                    System.out.println();
                 }
             }
 
         }
-        // DO: Display list of options with their description and usage informations.
     }
 }
