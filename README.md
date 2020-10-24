@@ -66,10 +66,10 @@ Currently, it can be run through gradle too. In order to pass program arguments,
 ./gradlew run --args='here are my args'
 ```
 
-For instance:
+For instance
 
 ```
-./gradlew run --args='. --addPlugin=CountCommitsPerAuthor'
+./gradlew run --args='. --plugins=countCommits'
 ```
 
 Will count the commits of each author in the current branch of the git repository present in the current folder (".").
