@@ -144,6 +144,10 @@ public class Visulog {
             // TODO: Save config to file.
         }
 
+        if (plugins.length == 0) {
+            return Optional.empty();
+        }
+
         return Optional.of(new Configuration(gitPath, pluginsMap));
     }
 
