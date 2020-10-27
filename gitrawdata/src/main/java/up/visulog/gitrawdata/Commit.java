@@ -16,10 +16,8 @@ import java.util.Optional;
  * Class that represent a git commit with data such as id, date, etc
  */
 public class Commit {
-	/** ID of the commit. */
-    public final int id;
 
-    /** Date of creation of the commit. */
+    public final String id;
     public final Date date;
 
     /** Author of the commit. */
@@ -40,7 +38,7 @@ public class Commit {
      * @param description Commit's message
      * @param mergedFrom Branch the commit is mergedFrom
      */
-    public Commit(int id, String author, Date date, String description, String mergedFrom) {
+    public Commit(String id, String author, Date date, String description, String mergedFrom) {
         this.id = id;
         this.author = author;
         this.date = date;
@@ -56,7 +54,7 @@ public class Commit {
      * @throws IOException is can't read the git.log file
      */
     public static List<Commit> parseLogFromCommand(Path gitPath) {
-        return parseLog(parseCommand(gitPath, "git", "log"));
+        return parseLog(parseCommand(gitPath, "git", "log", "--date=format:%d/%m/%Y"));
     }
 
     /**
@@ -106,7 +104,7 @@ public class Commit {
             if (line == null) return Optional.empty(); // if no line can be read, we are done reading the buffer
             var idChunks = line.split(" ");
             if (!idChunks[0].equals("commit")) parseError();
-            var builder = new CommitBuilder(Integer.parseInt(idChunks[1]));
+            var builder = new CommitBuilder(idChunks[1]);
 
             line = input.readLine();
             while (!line.isEmpty()) {

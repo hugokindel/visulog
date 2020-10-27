@@ -6,7 +6,7 @@ import java.util.Date;
  * Class that creates the Commit (Commit only represent it as an object)
  */
 public class CommitBuilder {
-    private final int id;
+    private final String id;
     private String author;
     private Date date;
     private String description;
@@ -15,7 +15,7 @@ public class CommitBuilder {
     /**
      * Constructor is needed since id is final
      */
-    public CommitBuilder(int id) {
+    public CommitBuilder(String id) {
         this.id = id;
     }
 
