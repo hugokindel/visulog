@@ -1,7 +1,6 @@
 package up.visulog.analyzer;
 
 import up.visulog.config.Configuration;
-import up.visulog.config.PluginConfig;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -43,10 +41,8 @@ public class Analyzer {
     public AnalyzerResult computeResults() {
         List<AnalyzerPlugin> plugins = new ArrayList<>();
 
-        for (var pluginConfigEntry : config.getPluginConfigs().entrySet()) {
-            String pluginName = pluginConfigEntry.getKey();
-            PluginConfig pluginConfig = pluginConfigEntry.getValue();
-            Optional<AnalyzerPlugin> plugin = makePlugin(pluginName, pluginConfig);
+        for (var pluginName : config.getPluginNames()) {
+            Optional<AnalyzerPlugin> plugin = makePlugin(pluginName);
             plugin.ifPresent(plugins::add);
         }
 
@@ -74,10 +70,9 @@ public class Analyzer {
     * Create an instance of a plugin.
     *
     * @param pluginName The name of the plugin.
-    * @param pluginConfig The config to use when creating the plugin.
     * @return a plugin only if it exists.
     */
-    private Optional<AnalyzerPlugin> makePlugin(String pluginName, PluginConfig pluginConfig) {
+    private Optional<AnalyzerPlugin> makePlugin(String pluginName) {
         try {
             String className = (pluginName.contains(".") ? pluginName : "up.visulog.analyzer.plugin." + pluginName);
             Class<? extends AnalyzerPlugin> classType = Class.forName(className).asSubclass(AnalyzerPlugin.class);

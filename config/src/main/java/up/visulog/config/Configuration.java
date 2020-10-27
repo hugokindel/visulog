@@ -17,16 +17,16 @@ public class Configuration {
     /**
      * Plugins used by the git command.
      */
-    private final Map<String, PluginConfig> plugins;
+    private final List<String> plugins;
 
     /**
      * Creates a new configuration.
      * @param gitPath Used git command.
      * @param plugins Plugin used by the git command.
      */
-    public Configuration(Path gitPath, Map<String, PluginConfig> plugins) {
+    public Configuration(Path gitPath, List<String> plugins) {
         this.gitPath = gitPath;
-        this.plugins = Map.copyOf(plugins);
+        this.plugins = List.copyOf(plugins);
     }
 
     /**
@@ -39,7 +39,7 @@ public class Configuration {
     /**
      * @return Return plugin used by the git command.
      */
-    public Map<String, PluginConfig> getPluginConfigs() {
+    public List<String> getPluginNames() {
         return plugins;
     }
 }
