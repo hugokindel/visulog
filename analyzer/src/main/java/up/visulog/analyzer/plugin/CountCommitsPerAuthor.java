@@ -76,13 +76,13 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
         /** @return the result of this analysis, as an HTML div (which can be use to render an .html file). */
         @Override
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div>Commits per author: <ul>");
+            StringBuilder html = new StringBuilder("<div>Commits per author: \n<ul>\n");
 
             for (var item : commitsPerAuthor.entrySet()) {
-                html.append("<li>").append(item.getKey()).append(": ").append(item.getValue()).append("</li>");
+                html.append("<li>").append(item.getKey()).append(": ").append(item.getValue()).append("</li>\n");
             }
 
-            html.append("</ul></div>");
+            html.append("</ul>\n</div>\n");
 
             return html.toString();
         }

@@ -29,6 +29,6 @@ public class AnalyzerResult {
 
     /** Returns an HTML div representation of the object. */
     public String toHTML() {
-        return "<html><body>" + subResults.stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur) + "</body></html>";
+        return "<html>\n<body>\n" + subResults.stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur) + "</body>\n</html>";
     }
 }
