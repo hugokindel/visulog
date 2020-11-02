@@ -1,10 +1,9 @@
-
 plugins {
     java
     application
 }
 
-application.mainClass.set("up.visulog.cli.CLILauncher")
+application.mainClass.set("up.visulog.cli.CliApplication")
 
 dependencies {
     implementation(project(":analyzer"))

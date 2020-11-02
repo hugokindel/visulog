@@ -7,11 +7,20 @@ import up.visulog.cli.annotation.Option;
 import up.visulog.cli.util.Parser;
 import up.visulog.config.Configuration;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * This calls the other modules and print out an HTML div representation
@@ -134,12 +143,54 @@ public class Visulog {
         }
 
         if (!loadConfig.isEmpty()) {
-            // TODO: Load config from file at path.
             // TODO: Add possibility to load multiple config files at once, load config path should become an array.
+            File f = new File(loadConfig);
+            if(f.exists() && !f.isDirectory()) {
+                StringBuilder contentBuilder = new StringBuilder();
+
+                try (Stream<String> stream = Files.lines( Paths.get(loadConfig), StandardCharsets.UTF_8))
+                {
+                    stream.forEach(s -> contentBuilder.append(s).append("\n"));
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+
+                String content = contentBuilder.toString().replace("\n", "").replace("\r", "");
+                List<String> options = new ArrayList<>();
+                options.addAll(Arrays.asList(content.split(" ")));
+                options.addAll(Arrays.asList(args));
+                for (int i = 0; i < options.size(); i++) {
+                    if (options.get(i).contains("-l=") || options.get(i).contains("--load-config=")) {
+                        options.remove(i);
+                        i--;
+                    }
+                }
+
+                loadConfig = "";
+
+
+                return makeConfigFromCommandLineArgs(options.toArray(new String[0]));
+            }
         }
 
         if (!saveConfig.isEmpty()) {
-            // TODO: Save config to file.
+            try {
+                Files.deleteIfExists(Paths.get(saveConfig));
+                File configFile = new File(saveConfig);
+                FileWriter fileWriter = new FileWriter(configFile);
+                StringBuilder fileContent = new StringBuilder();
+                for (String arg : args) {
+                    if (!arg.contains("--s=") && !arg.contains("--save-config=")) {
+                        fileContent.append(arg).append(" ");
+                    }
+                }
+                fileWriter.write(fileContent.toString().substring(0, fileContent.length() - 1));
+                fileWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return plugins.length == 0 ? Optional.empty() : Optional.of(new Configuration(gitPath, Arrays.asList(plugins)));
