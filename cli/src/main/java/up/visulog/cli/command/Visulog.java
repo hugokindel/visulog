@@ -21,23 +21,26 @@ import java.util.Optional;
 public class Visulog {
     /** Option to show the help message. */
     @Option(names = {"-h", "--help"}, description = "Show this help message.")
-    boolean showHelp;
+    protected boolean showHelp;
 
     /** Option to show the version message. */
     @Option(names = {"-v", "--version"}, description = "Show the current version of this software.")
-    boolean showVersion;
+    protected boolean showVersion;
 
     /** Option to define which plugins to use. */
     @Option(names = {"-p", "--plugins"}, description = "Add a plugin (by name) to run.", usage = "<plugin>,...")
-    String[] plugins;
+    protected String[] plugins;
 
     /** Option to load a config file with specified path. */
     @Option(names = {"-l", "--load-config"}, description = "Load a configuration file which contains a list of plugins to run.", usage = "<path>")
-    String loadConfig;
+    protected String loadConfig;
 
     /** Option to save config of this instance to a file to specified path. */
     @Option(names = {"-l", "--save-config"}, description = "Save the configuration file of this command call.")
-    String saveConfig;
+    protected String saveConfig;
+
+    /** Number of unknown options called. */
+    protected int noUnknowns;
 
     /** Class constructor. */
     public Visulog() {
@@ -61,8 +64,6 @@ public class Visulog {
             Analyzer analyzer = new Analyzer(config.get());
             AnalyzerResult results = analyzer.computeResults();
             System.out.println(results.toHTML());
-        } else {
-            displayHelp();
         }
 
         return 0;
@@ -76,6 +77,10 @@ public class Visulog {
      * @return a Configuration of a hash map that contains plugins and a Path.
      */
     Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
+        if (args.length == 0) {
+            showHelp = true;
+        }
+
         Path gitPath = FileSystems.getDefault().getPath(".");
 
         for (String arg : args) {
@@ -137,16 +142,13 @@ public class Visulog {
             // TODO: Save config to file.
         }
 
-        if (plugins.length == 0) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new Configuration(gitPath, Arrays.asList(plugins)));
+        return plugins.length == 0 ? Optional.empty() : Optional.of(new Configuration(gitPath, Arrays.asList(plugins)));
     }
 
     /** print an error message to indicate that one of the option asked for is unknown. */
-    private static void displayUnknownOption(String option) {
+    private void displayUnknownOption(String option) {
         System.out.println("Unknown option: '" + option + "'!");
+        noUnknowns++;
         // TODO: Display closest command (use Levenshtein distance between all option names possible).
     }
 
