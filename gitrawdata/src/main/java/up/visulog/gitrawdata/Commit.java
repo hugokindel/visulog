@@ -113,7 +113,7 @@ public class Commit {
                 var fieldContent = line.substring(colonPos + 1).trim();
                 switch (fieldName) {
                     case "Author":
-                        builder.setAuthor(fieldContent);
+                        builder.setAuthor(fieldContent.replace('<', '(').replace('>', ')'));
                         break;
                     case "Merge":
                         builder.setMergedFrom(fieldContent);
