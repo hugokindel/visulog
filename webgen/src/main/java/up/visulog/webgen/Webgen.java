@@ -3,10 +3,12 @@ package up.visulog.webgen;
 import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerResult;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /*
 Webgen is a HTML code generator in a file (yyyy_MM_dd-HH-mm.hmtl) send to visulog/output
@@ -18,8 +20,9 @@ public class Webgen {
     */
    public final AnalyzerResult result;
 
-   public Webgen(AnalyzerResult result) {
+   public Webgen(AnalyzerResult result, List<String> pluginNames) {
       this.result = result;
+      new HTMLEntities(pluginNames);
    }
 
    /*

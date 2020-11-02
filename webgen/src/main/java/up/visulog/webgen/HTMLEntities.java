@@ -1,15 +1,17 @@
 package up.visulog.webgen;
 
+import java.util.List;
+
 public class HTMLEntities {
 
-   public final static String DOCTYPE = "<!DOCTYPE html>\n" +
-         "<html lang=\"en\">\n";
 
-   public final static String HEAD = "<head>\n" +
-         "    <meta charset=\"UTF-8\">\n" +
-         "    <link rel=\"stylesheet\" href=\"css/style.css\">" +
-         "    <title>Title</title>\n" +
-         "</head>\n";
+   public final static String DOCTYPE = "<!DOCTYPE html>\n" +
+           "<html lang=\"en\">\n";
+
+   public static String HEAD = "<head>\n" +
+           "    <meta charset=\"UTF-8\">\n" +
+           "    <link rel=\"stylesheet\" href=\"css/style.css\">" +
+           "    <title>Visulog - ";
 
    public final static String HEADER = "<header>\n" +
            "    <div class=\"head\">\n" +
@@ -18,4 +20,12 @@ public class HTMLEntities {
            "        <div class=\"headerFantomDiv\"></div>\n" +
            "    </div>\n" +
            "</header>";
+
+   public HTMLEntities(List<String> plugins) {
+      HEAD += plugins;
+      HEAD += "</title>\n" +
+              "         </head>\n";
+   }
+
+
 }
