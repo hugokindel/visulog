@@ -1,3 +1,5 @@
+package up.visulog.cli.command;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
