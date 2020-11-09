@@ -22,11 +22,11 @@ Outils permettant d'analyser et visualiser les logs des dépôts gits.
 
 ### Librairies à utiliser
 
-- JGit
+- JGit  
 Introduit un interface Java pour manipuler les dépôts git.
-- HtmlFlow
+- HtmlFlow  
 Génère des documents HTML bien typées (donc correct par rapport au système de validation W3C).
-- CanvasJS
+- CanvasJS  
 Éditer des visualisations numériques (courbes, histogrammes, etc.).
 
 ## Réunion de la semaine 3
