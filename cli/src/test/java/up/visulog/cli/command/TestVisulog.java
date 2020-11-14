@@ -8,31 +8,35 @@ public class TestVisulog {
     /** Test if the configuration is created. */
     @Test
     public void testArgumentParser() {
-        var config1 = new Visulog().makeConfigFromCommandLineArgs(new String[]{".", "--plugins=countCommits"});
-        assertTrue(config1.isPresent());
+        Visulog visulog = new Visulog();
+        visulog.run(new String[] {".", "--plugins=CountCommitsPerAuthor"});
+        assertEquals(".", visulog.getValue());
+        assertEquals("CountCommitsPerAuthor", visulog.plugins[0]);
     }
 
     /** Test if the program works with good arguments. */
     @Test
     public void testProgramWithRealArguments() {
         Visulog visulog = new Visulog();
-        visulog.makeConfigFromCommandLineArgs(new String[]{".", "--plugins=countCommits"});
-        assertEquals(1, visulog.plugins.length);
+        visulog.run(new String[] {"--plugins=CountCommitsPerAuthor,CountLinesPerAuthor"});
+        assertEquals("CountCommitsPerAuthor", visulog.plugins[0]);
+        assertEquals("CountLinesPerAuthor", visulog.plugins[1]);
+
     }
 
     /** Test if the program works with no arguments (help showed). */
     @Test
     public void testProgramWithNoArguments() {
         Visulog visulog = new Visulog();
-        visulog.makeConfigFromCommandLineArgs(new String[] { });
-        assertTrue(visulog.showHelp);
+        visulog.run(new String[] {});
+        assertTrue(visulog.willShowHelp());
     }
 
     /** Test if tje program works with unknown arguments. */
     @Test
     public void testProgramWithUnknownArguments() {
         Visulog visulog = new Visulog();
-        visulog.makeConfigFromCommandLineArgs(new String[] { "--testUnknown" });
-        assertEquals(1, visulog.noUnknowns);
+        visulog.run(new String[] {"--testWithThis"});
+        assertEquals(1, visulog.getNoUnknowns());
     }
 }
