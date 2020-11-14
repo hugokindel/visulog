@@ -88,3 +88,29 @@ Révision des semaines 3 et 4
 - Finir les issues du sprint 1 restantes puis aller sur le groupe s'occupant d'ajouter des nouvelles fonctionnalités. @hugokindel @jauroyon
 - Commencer le projet webgen (générer une page HTML, utiliser HtmlFlow et CanvasJS, ...). @clipal @somon @allano @payet
 - Ajouter des nouvelles fonctionnalités (classe branch dans gitrawdata, nouvelles options, ...). @mohamedc
+
+## Réunion de la semaine 7
+
+Révision des semaines 5 et 6
+
+### Travail effectué
+
+- Issues réalisés (merge requests correspondantes fermés):
+	- #16 - @jauroyon @hugokindel
+	- #21 - @jauroyon
+	- #15 - @clipal @hugokindel
+	- #13 - @payet
+	- #8 - @allano
+	- #22 - @mohamedc
+	- #6 - @mohamedc
+- Issues en cours de réalisation:
+	- #18
+
+### Rétrospective des problèmes rencontrés
+
+- Soucis d'emploi du temps (dû aux demplois de certains membres du groupe et au reconfinement).
+
+### Planification des semaines à venir
+
+- Continuer le travail actuel avec les mêmes répartitions d'équipes (faire webgen, ajouter des fonctionnalités/corriger le code).
+- Bien utiliser les librairies pour le développement de webgen !
