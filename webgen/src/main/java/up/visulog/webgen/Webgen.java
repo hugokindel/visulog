@@ -3,6 +3,7 @@ package up.visulog.webgen;
 import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerResult;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -10,22 +11,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/*
+Webgen is a HTML code generator in a file (yyyy_MM_dd-HH-mm.hmtl) send to visulog/output
+ */
 public class Webgen {
 
+   /*
+   Webgen retrieves the result of the plugins analyzer that it will then process
+    */
    public final AnalyzerResult result;
 
-   public Webgen(AnalyzerResult result) {
+   public Webgen(AnalyzerResult result, List<String> pluginNames) {
       this.result = result;
+      new HTMLEntities(pluginNames);
    }
 
+   /*
+   Generates an html code containing the description of each plugin
+   which will be printed both on the new html file but also on the command terminal
+   */
    public void generate() {
       this.getFile();
       this.printHTML();
    }
 
+
    public void getFile() {
       try {
+         //Creates a new PrintWriter, without automatic line flushing, with the specified file name.
          PrintWriter p = new PrintWriter("output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html");
+         // Writes a string in the file name on PrintWriter p
          p.write(HTMLEntities.DOCTYPE + HTMLEntities.HEAD);
          p.write("<body>\n" + HTMLEntities.HEADER+ "\n<div class=\"results\">\n");
          p.write("<div class=\"pluginTextual\">");

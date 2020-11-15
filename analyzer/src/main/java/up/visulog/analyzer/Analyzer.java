@@ -83,4 +83,8 @@ public class Analyzer {
             return Optional.empty();
         }
     }
+
+    public Configuration getConfig() {
+        return config;
+    }
 }
