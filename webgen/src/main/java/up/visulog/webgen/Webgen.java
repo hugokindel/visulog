@@ -3,7 +3,6 @@ package up.visulog.webgen;
 import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerResult;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -61,7 +60,7 @@ public class Webgen {
                   "        },\n" +
                   "        data: [{\ntype: \"column\",\ndataPoints: [\n");
             for (var item : results.getResults().entrySet()) {
-               script.add("{ y: "+item.getValue()+", label: \""+item.getKey().substring(0, item.getKey().indexOf("<"))+"\" },\n");
+               script.add("{ y: "+item.getValue()+", label: \""+item.getKey()+"\" },\n");
             }
             script.add("]\n}]\n" +
                   "    });\n" +

@@ -8,12 +8,11 @@ public class HTMLEntities {
    public final static String DOCTYPE = "<!DOCTYPE html>\n" +
            "<html lang=\"en\">\n";
 
-   public final static String HEAD = "<head>\n" +
+   public static String HEAD = "<head>\n" +
          "    <meta charset=\"UTF-8\">\n" +
          "    <link rel=\"stylesheet\" href=\"css/style.css\">" +
-         "    <title>Title</title>\n" +
          "    <script src=\"js/canvasjs.min.js\"></script>" +
-         "</head>\n";
+         "    <title>";
 
 
    public final static String HEADER = "<header>\n" +
