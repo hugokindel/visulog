@@ -18,6 +18,8 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
     /** The result obtained after the computation. */
     private Result result;
 
+
+
     /**
      * Class constructor.
      *
@@ -59,11 +61,19 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
 
     /** This is the result class for this plugin. */
     static class Result implements AnalyzerPlugin.Result {
+
+        private final String pluginName = "Count commits per author";
+
+        @Override
+        public String getPluginName() {
+            return pluginName;
+        }
+
         /** The hash map (unordered but faster) containing the count of commits per author. */
         private final Map<String, Integer> commitsPerAuthor = new HashMap<>();
 
         /** Get the hash map containing the count of commits per author. */
-        Map<String, Integer> getCommitsPerAuthor() {
+        public Map<String, Integer> getResults() {
             return commitsPerAuthor;
         }
 
@@ -86,5 +96,7 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
 
             return html.toString();
         }
+
+
     }
 }
