@@ -86,7 +86,7 @@ public abstract class Runnable {
                 }
 
                 if (!find) {
-                    displayUnknownOption(parts[0]);
+                    displayUnknownOption(parts[0], fields);
                 }
             } else {
                 value = arg;
@@ -106,9 +106,31 @@ public abstract class Runnable {
      * Shows the unknown option along with the closest one (if found).
      *
      * @param unknownOption The unknown option.
+     * @param fields The fields to search in.
      */
-    private void displayUnknownOption(String unknownOption) {
-        System.out.println("Unknown option: '" + unknownOption + "'!");
+    private void displayUnknownOption(String unknownOption, ArrayList<Field> fields) {
+        int distance = -1;
+        String nearest = "";
+
+        for (Field field : fields) {
+            Option option = field.getAnnotation(Option.class);
+
+            for (String name : option.names()) {
+                int optionDistance = calculateLevenshteinDistance(unknownOption, name);
+
+                if (distance == -1 || optionDistance < distance) {
+                    distance = optionDistance;
+                    nearest = name;
+                }
+            }
+        }
+
+        System.out.println("Unknown option '" + unknownOption + "'!");
+
+        if (!nearest.isEmpty()) {
+            System.out.println("Did you mean '" + nearest + "'?");
+        }
+
         noUnknowns++;
     }
 
@@ -162,6 +184,40 @@ public abstract class Runnable {
                 System.out.println(line);
             }
         }
+    }
+
+    /**
+     * Calculate the levenshtein distance.
+     * Implementation from: http://rosettacode.org/wiki/Levenshtein_distance#Java
+     *
+     * @param s1 The first string to compare.
+     * @param s2 The second string to compare.
+     * @return the distance between s1 and s2.
+     */
+    public static int calculateLevenshteinDistance(String s1, String s2) {
+        if(s1.length() == 0) {
+            return s2.length();
+        } else if(s2.length() == 0) {
+            return s1.length();
+        }
+
+        if(s1.charAt(0) == s2.charAt(0)) {
+            return calculateLevenshteinDistance(s1.substring(1), s2.substring(1));
+        }
+
+        int a = calculateLevenshteinDistance(s1.substring(1), s2.substring(1));
+        int b = calculateLevenshteinDistance(s1, s2.substring(1));
+        int c = calculateLevenshteinDistance(s1.substring(1), s2);
+
+        if(a > b) {
+            a = b;
+        }
+
+        if(a > c) {
+            a = c;
+        }
+
+        return a + 1;
     }
 
     /** @return if the program will show the help. */
