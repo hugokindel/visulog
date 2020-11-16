@@ -1,25 +1,42 @@
 package up.visulog.cli.command;
 
 import org.junit.Test;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /** This is a unit test class to test the makeConfigFromCommandLineArgs task. */
 public class TestVisulog {
-    /**
-     TODO: One can also add integration tests here:
-     - Run the whole program with some valid options and look whether the output has a valid format.
-     - Run the whole program with bad command and see whether something that looks like help is printed.
-     */
+    /** Test if the configuration is created. */
     @Test
     public void testArgumentParser() {
-        var config1 = new Visulog().makeConfigFromCommandLineArgs(new String[]{".", "--plugins=countCommits"});
-        assertTrue(config1.isPresent());
+        Visulog visulog = new Visulog();
+        visulog.run(new String[] {".", "--plugins=CountCommitsPerAuthor"});
+        assertEquals(".", visulog.getValue());
+        assertEquals("CountCommitsPerAuthor", visulog.plugins[0]);
+    }
 
-        var config2 = new Visulog().makeConfigFromCommandLineArgs(new String[] {"--nonExistingOption"});
-        assertFalse(config2.isPresent());
+    /** Test if the program works with good arguments. */
+    @Test
+    public void testProgramWithRealArguments() {
+        Visulog visulog = new Visulog();
+        visulog.run(new String[] {"--plugins=CountCommitsPerAuthor,CountLinesPerAuthor"});
+        assertEquals("CountCommitsPerAuthor", visulog.plugins[0]);
+        assertEquals("CountLinesPerAuthor", visulog.plugins[1]);
 
-        var config3 = new Visulog().makeConfigFromCommandLineArgs(new String[]{".", "-h"});
-        assertFalse(config3.isPresent());
+    }
+
+    /** Test if the program works with no arguments (help showed). */
+    @Test
+    public void testProgramWithNoArguments() {
+        Visulog visulog = new Visulog();
+        visulog.run(new String[] {});
+        assertTrue(visulog.willShowHelp());
+    }
+
+    /** Test if tje program works with unknown arguments. */
+    @Test
+    public void testProgramWithUnknownArguments() {
+        Visulog visulog = new Visulog();
+        visulog.run(new String[] {"--testWithThis"});
+        assertEquals(1, visulog.getNoUnknowns());
     }
 }
