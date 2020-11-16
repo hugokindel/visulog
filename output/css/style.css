@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+* {
+    font-family: 'Montserrat', sans-serif;
+    transition: all ease-out 120ms;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.head {
+    background: #FF6363;
+    color: white;
+    font-size: 2em;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: auto;
+    align-items: center;
+    box-shadow: black 0 5px 10px;
+}
+
+.headerFantomDiv {
+    width: 90px;
+}
+
+.head > a > img {
+    width: 40px;
+    animation: 1.5s ease-in-out appearOpacity;
+}
+
+.head > span {
+    animation: 1.5s ease-in-out appearOpacity;
+}
+
+.results {
+    background: white;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 1000px;
+}
+
+.results > .pluginTextual {
+    background: #4A4A4A;
+    width: 45%;
+}
+
+.results > .pluginTextual > div {
+    animation: 1.1s ease-in-out arriveeDivPluginTextLeft;
+    position: relative;
+    margin: 30px;
+    padding: 25px;
+    background: #ffd1d1;
+    border-radius: 10px;
+    height: 350px;
+    overflow-y: auto;
+    color: #4A4A4A;
+}
+
+.pluginTextual > div:hover {
+    transform: scale(1.04);
+    background: #FFFFFF;
+}
+
+.pluginTextual > div > span {
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+.pluginGraphical {
+    background: #f1f1f1;
+    width: 55%;
+}
+
+.results > .pluginGraphical > div {
+    animation: 1.1s ease-in-out arriveeDivPluginTextRight;
+    position: relative;
+    border-radius: 10px;
+    height: 400px;
+    margin: 30px;
+    color: #4A4A4A;
+}
+
+.pluginGraphical > div:hover {
+    transform: scale(1.02);
+}
+
+
+@keyframes appearOpacity {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes arriveeDivPluginTextLeft {
+    from {
+        left: -800px;
+        opacity: 0;
+    }
+    to {
+        left: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes arriveeDivPluginTextRight {
+    from {
+        right: -800px;
+        opacity: 0;
+    }
+    to {
+        right: 0;
+        opacity: 1;
+    }
+}
