@@ -1,16 +1,14 @@
 package up.visulog.webgen;
 
-import up.visulog.analyzer.AnalyzerPlugin;
+import htmlflow.HtmlView;
+import htmlflow.StaticHtml;
 import up.visulog.analyzer.AnalyzerResult;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-
 
 /*
 Webgen is a HTML code generator in a file (yyyy_MM_dd-HH-mm.hmtl) send to visulog/output
@@ -31,14 +29,47 @@ public class Webgen {
    Generates an html code containing the description of each plugin
    which will be printed both on the new html file but also on the command terminal
    */
-   public void generate() {
-      this.getFile();
-      this.printHTML();
-   }
 
 
    public void getFile() {
+
       try {
+         // TODO : implement HTMLFLow
+         HtmlView view = StaticHtml
+               .view()
+               .html()
+                  .head()
+                     .title().text("HtmlFlow").__()
+                  .__() //head
+                  .body()
+                     .div().attrClass("container")
+                        .span().text("My first page with HtmlFlow").__()
+                        .img().attrSrc("http://bit.ly/2MoHwrU").__()
+                     .p().text("Typesafe is awesome! :-)").__()
+                  .__() //div
+                  .__() //body
+               .__(); //html
+
+
+         String html = view.render();        // 1) get a string with the HTML
+         PrintWriter p = new PrintWriter("output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html");
+
+         p.write(html);
+         p.close();
+
+
+         // 3) write to details.html file
+
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
+
+
+     /*
+      try {
+
+
          //Creates a new PrintWriter, without automatic line flushing, with the specified file name.
          PrintWriter p = new PrintWriter("output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html");
          // Writes a string in the file name on PrintWriter p
@@ -79,6 +110,8 @@ public class Webgen {
       } catch (FileNotFoundException e) {
          e.printStackTrace();
       }
+      */
+
    }
 
    public void printHTML() {

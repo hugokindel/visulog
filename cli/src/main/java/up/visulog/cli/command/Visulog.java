@@ -6,9 +6,8 @@ import up.visulog.cli.annotation.Command;
 import up.visulog.cli.annotation.Option;
 import up.visulog.cli.util.Parser;
 import up.visulog.config.Configuration;
-import up.visulog.webgen.*;
+import up.visulog.webgen.Webgen;
 
-import java.awt.*;
 import java.lang.reflect.Field;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -62,7 +61,7 @@ public class Visulog {
         if (config.isPresent()) {
             Analyzer analyzer = new Analyzer(config.get());
             AnalyzerResult results = analyzer.computeResults();
-            new Webgen(results, analyzer.getConfig().getPluginNames()).generate();
+            new Webgen(results, analyzer.getConfig().getPluginNames()).getFile();
         } else {
             displayHelp();
         }
