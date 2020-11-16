@@ -10,7 +10,6 @@ public interface AnalyzerPlugin {
 	/** This is the interface to use for every plugin's result. */
     interface Result {
 
-       String getPluginName();
        /** @return the result of this analysis, as a string. */
         String getResultAsString();
         
@@ -18,6 +17,10 @@ public interface AnalyzerPlugin {
         String getResultAsHtmlDiv();
 
         Map<String, Integer> getResults();
+
+        String getPluginName();
+
+        String getChartType();
     }
 
     /** Run this analyzer plugin. */

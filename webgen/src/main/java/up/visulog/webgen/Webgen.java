@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+
 /*
 Webgen is a HTML code generator in a file (yyyy_MM_dd-HH-mm.hmtl) send to visulog/output
  */
@@ -51,14 +53,11 @@ public class Webgen {
             p.write("<div id=\""+results.getPluginName().replace(" ", "") + i + "\">\n");
             script.add("\nvar chart" + results.getPluginName().replace(" ", "") + i + " = new CanvasJS.Chart(\"" + results.getPluginName().replace(" ", "") + i + "\", {\n" +
                   "        animationEnabled: true,\n" +
-                  "        theme: \"dark2\"," +
+                  "        theme: \"light2\"," +
                   "        title:{\n" +
                   "            text: \"" + results.getPluginName() + "\"\n" +
                   "        },\n" +
-                  "        axisY: {\n" +
-                  "            title: \"Number\"\n" +
-                  "        },\n" +
-                  "        data: [{\ntype: \"column\",\ndataPoints: [\n");
+                  "        data: [{\ntype: \""+results.getChartType()+"\",\ndataPoints: [\n");
             for (var item : results.getResults().entrySet()) {
                script.add("{ y: "+item.getValue()+", label: \""+item.getKey()+"\" },\n");
             }

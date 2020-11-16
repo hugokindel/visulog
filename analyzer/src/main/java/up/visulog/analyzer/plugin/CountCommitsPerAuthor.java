@@ -1,9 +1,11 @@
 package up.visulog.analyzer.plugin;
 
 import up.visulog.analyzer.AnalyzerPlugin;
+import up.visulog.analyzer.AnalyzerShape;
+import up.visulog.analyzer.ChartTypes;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +19,6 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
 
     /** The result obtained after the computation. */
     private Result result;
-
 
 
     /**
@@ -39,8 +40,8 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
         var result = new Result();
 
         for (var commit : gitLog) {
-            var nb = result.commitsPerAuthor.getOrDefault(commit.author, 0);
-            result.commitsPerAuthor.put(commit.author, nb + 1);
+            var nb = result.resultsMap.getOrDefault(commit.author, 0);
+            result.resultsMap.put(commit.author, nb + 1);
         }
 
         return result;
@@ -59,28 +60,37 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
         return result;
     }
 
+
+
     /** This is the result class for this plugin. */
-    static class Result implements AnalyzerPlugin.Result {
+    static class Result extends AnalyzerShape implements AnalyzerPlugin.Result {
 
-        private final String pluginName = "Count commits per author";
-
-        @Override
-        public String getPluginName() {
-            return pluginName;
+        public Result() {
+            super("Count commits per author", ChartTypes.COLUMN);
         }
-
-        /** The hash map (unordered but faster) containing the count of commits per author. */
-        private final Map<String, Integer> commitsPerAuthor = new HashMap<>();
 
         /** Get the hash map containing the count of commits per author. */
         public Map<String, Integer> getResults() {
-            return commitsPerAuthor;
+            return this.resultsMap;
+        }
+
+        /**
+         * @return the plugin name
+         */
+        @Override
+        public String getPluginName() {
+            return this.pluginName;
+        }
+
+        @Override
+        public String getChartType() {
+            return this.chartType;
         }
 
         /** @return the result of this analysis, as a string. */
         @Override
         public String getResultAsString() {
-            return commitsPerAuthor.toString();
+            return this.resultsMap.toString();
         }
 
         /** @return the result of this analysis, as an HTML div (which can be use to render an .html file). */
@@ -88,7 +98,7 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
         public String getResultAsHtmlDiv() {
             StringBuilder html = new StringBuilder("<div>Commits per author: \n<ul>\n");
 
-            for (var item : commitsPerAuthor.entrySet()) {
+            for (var item : this.resultsMap.entrySet()) {
                 html.append("<li>").append(item.getKey()).append(": ").append(item.getValue()).append("</li>\n");
             }
 
