@@ -2,6 +2,8 @@ package up.visulog.webgen;
 
 import htmlflow.HtmlView;
 import htmlflow.StaticHtml;
+import org.xmlet.htmlapifaster.EnumRelType;
+import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerResult;
 
 import java.io.IOException;
@@ -19,10 +21,11 @@ public class Webgen {
    Webgen retrieves the result of the plugins analyzer that it will then process
     */
    public final AnalyzerResult result;
+   public final List<String> pluginNames;
 
    public Webgen(AnalyzerResult result, List<String> pluginNames) {
       this.result = result;
-      new HTMLEntities(pluginNames);
+      this.pluginNames = pluginNames;
    }
 
    /*
@@ -32,86 +35,84 @@ public class Webgen {
 
 
    public void getFile() {
-
       try {
-         // TODO : implement HTMLFLow
          HtmlView view = StaticHtml
                .view()
-               .html()
+               .html().attrLang("fr")
                   .head()
-                     .title().text("HtmlFlow").__()
+                     .meta().attrCharset("UTF-8").__()
+                     .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__()
+                     .title().text(this.pluginNames.toString()).__()
+                     .script().attrSrc("js/canvasjs.min.js").__()
                   .__() //head
                   .body()
-                     .div().attrClass("container")
-                        .span().text("My first page with HtmlFlow").__()
-                        .img().attrSrc("http://bit.ly/2MoHwrU").__()
-                     .p().text("Typesafe is awesome! :-)").__()
-                  .__() //div
+                     .header().attrClass("head")
+                        .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
+                        .span().text("VISULOG").__()
+                        .div().attrClass("phantomDiv").__()
+                     .__() // header
+                     .div().attrClass("results")
+                        .div().attrClass("pluginTextual")
+                           .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
+                        .__() // div.pluginTextual
+                        .div().attrClass("pluginGraphical")
+                           .text(createGraphsDivs())
+                        .__() // div.pluginGraphical
+                     .__() //div
+                     .script()
+                        .text("window.onload = function() {" + createScripts() + "}")
+                     .__()// script
                   .__() //body
                .__(); //html
 
 
-         String html = view.render();        // 1) get a string with the HTML
+         String html = view.render();
          PrintWriter p = new PrintWriter("output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html");
 
          p.write(html);
          p.close();
 
-
-         // 3) write to details.html file
-
       } catch (IOException e) {
          e.printStackTrace();
       }
+   }
 
-
-
-     /*
-      try {
-
-
-         //Creates a new PrintWriter, without automatic line flushing, with the specified file name.
-         PrintWriter p = new PrintWriter("output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html");
-         // Writes a string in the file name on PrintWriter p
-         p.write(HTMLEntities.DOCTYPE + HTMLEntities.HEAD);
-         p.write("<body>\n" + HTMLEntities.HEADER+ "\n<div class=\"results\">\n");
-         p.write("<div class=\"pluginTextual\">");
-         p.write(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur));
-         p.write("\n</div>\n <div class=\"pluginGraphical\">\n");
-         int i = 0;
-         List<String> script = new ArrayList<>();
-         for (AnalyzerPlugin.Result results : result.getSubResults()) {
-            p.write("<div id=\""+results.getPluginName().replace(" ", "") + i + "\">\n");
-            script.add("\nvar chart" + results.getPluginName().replace(" ", "") + i + " = new CanvasJS.Chart(\"" + results.getPluginName().replace(" ", "") + i + "\", {\n" +
-                  "        animationEnabled: true,\n" +
-                  "        theme: \"light2\"," +
-                  "        title:{\n" +
-                  "            text: \"" + results.getPluginName() + "\"\n" +
-                  "        },\n" +
-                  "        data: [{\ntype: \""+results.getChartType()+"\",\ndataPoints: [\n");
-            for (var item : results.getResults().entrySet()) {
-               script.add("{ y: "+item.getValue()+", label: \""+item.getKey()+"\" },\n");
-            }
-            script.add("]\n}]\n" +
-                  "    });\n" +
-                  "    chart"+results.getPluginName().replace(" ", "")+i+".render();\n");
-            i++;
-            p.write("</div>");
-         }
-
-         p.write("<script>window.onload = function() {");
-         for (String s : script) {
-            p.write(s);
-         }
-         p.write("}</script>");
-         p.write("</div>\n</div>\n");
-         p.write("\n</body>\n</html>");
-         p.close();
-      } catch (FileNotFoundException e) {
-         e.printStackTrace();
+   public String createGraphsDivs() {
+      StringBuilder res = new StringBuilder();
+      int i = 0;
+      for (AnalyzerPlugin.Result results : result.getSubResults()) {
+         res.append("<div id=\"").append(results.getPluginName().replace(" ", "")).append(i).append("\"></div>\n");
+         i++;
       }
-      */
 
+      return res.toString();
+   }
+
+   public String createScripts() {
+      StringBuilder res = new StringBuilder();
+      int i = 0;
+      for (AnalyzerPlugin.Result results : result.getSubResults()) {
+         res.append("var chart")
+               .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
+               .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
+               .append("{           \n" +
+                     "                  animationEnabled: true,\n" +
+                     "                  theme: \"ligth2\",\n" +
+                     "                  title: {\n" +
+                     "                     text: \"").append(results.getPluginName()).append("\"")
+               .append("},\n" +
+                     "               data: [{\n" +
+                     "                  type: \"").append(results.getChartType()).append("\",")
+               .append("\n" +
+                     "               dataPoints: [");
+         for (var item : results.getResults().entrySet()) {
+            res.append("{ y: ").append(item.getValue()).append(", label: \"").append(item.getKey()).append("\"},\n");
+         }
+         res.append("]\n}\n]\n});\n");
+         res.append("chart").append(results.getPluginName().replace(" ", "")).append(i).append(".render();\n");
+         i++;
+      }
+      return res.toString();
    }
 
    public void printHTML() {
