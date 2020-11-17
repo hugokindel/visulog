@@ -104,7 +104,7 @@ Révision des semaines 5 et 6
 	- #22 - @mohamedc
 	- #6 - @mohamedc
 - Issues en cours de réalisation:
-	- #18
+	- #18 - @clipal @payet @allano @somon
 
 ### Rétrospective des problèmes rencontrés
 
@@ -114,3 +114,34 @@ Révision des semaines 5 et 6
 
 - Continuer le travail actuel avec les mêmes répartitions d'équipes (faire webgen, ajouter des fonctionnalités/corriger le code).
 - Bien utiliser les librairies pour le développement de webgen !
+
+## Réunion de la semaine 9
+
+Révision des semaines 7 et 8
+
+### Travail effectué
+
+- Issues réalisés (merge requests correspondantes fermés):
+	- #24 - @somon
+	- #30 - @mohamedc
+	- #31 - @hugokindel
+	- #23 - @somon
+	- #26 - @payet
+	- #32 - @somon @payet @clipal @allano
+	- #27 - @somon @payet @clipal @allano
+	- #18 - @somon @payet @clipal @allano
+	- #33 - @somon
+- Issues en cours de réalisation:
+	- #28 - @hugokindel @mohamedc
+	- #29 - @jauroyon
+- À réaliser:
+	- #25 - @jauroyon @mohamedc
+
+### Rétrospective des problèmes rencontrés
+
+- Répartition inégale du nombre de commit par personne, du à des soucis d'organisations, d'emploi du temps, etc. *doit être corrigé!*
+
+### Planification des semaines à venir
+
+- Implémenter JGit.
+- Ajouter et fonctionnalités répondants aux user-stories (majoritairement des plugins et options de commandes) maintenant que la majorité du logiciel est bien intégré.
