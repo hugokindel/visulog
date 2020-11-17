@@ -6,6 +6,8 @@ import org.xmlet.htmlapifaster.EnumRelType;
 import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerResult;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
@@ -67,10 +69,13 @@ public class Webgen {
 
 
          String html = view.render();
-         PrintWriter p = new PrintWriter("output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html");
+         String fileName = "output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html";
+         PrintWriter p = new PrintWriter(fileName);
 
          p.write(html);
          p.close();
+
+         Desktop.getDesktop().open(new File(fileName));
 
       } catch (IOException e) {
          e.printStackTrace();
