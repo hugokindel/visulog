@@ -64,7 +64,7 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
 
 
       protected Result() {
-         super("Count commits per mail", ChartTypes.BAR);
+         super("Count commits per mail", ChartTypes.PIE);
       }
 
       /** @return the result of the analysis as a string */

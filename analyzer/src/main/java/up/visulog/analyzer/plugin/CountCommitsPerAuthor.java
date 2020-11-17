@@ -66,7 +66,7 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
     static class Result extends AnalyzerShape implements AnalyzerPlugin.Result {
 
         public Result() {
-            super("Count commits per author", ChartTypes.COLUMN);
+            super("Count commits per author", ChartTypes.BAR);
         }
 
         /** Get the hash map containing the count of commits per author. */

@@ -102,7 +102,7 @@ public class Webgen {
                .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
                .append("{           \n" +
                      "                  animationEnabled: true,\n" +
-                     "                  theme: \"ligth2\",\n" +
+                     "                  theme: \"light2\",\n" +
                      "                  title: {\n" +
                      "                     text: \"").append(results.getPluginName()).append("\"")
                .append("},\n" +
