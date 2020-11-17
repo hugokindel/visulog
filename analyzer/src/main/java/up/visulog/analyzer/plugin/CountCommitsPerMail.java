@@ -1,6 +1,8 @@
 package up.visulog.analyzer.plugin;
 
 import up.visulog.analyzer.AnalyzerPlugin;
+import up.visulog.analyzer.AnalyzerShape;
+import up.visulog.analyzer.ChartTypes;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 
@@ -37,9 +39,9 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
       var result = new Result();
 
       for (var commit : gitLog) {
-         var substring = commit.author.substring(commit.author.indexOf('<') + 1, commit.author.indexOf('>'));
-         var nb = result.commitsPerMail.getOrDefault(substring, 0);
-         result.commitsPerMail.put(substring, nb + 1);
+         var substring = commit.author.substring(commit.author.indexOf('(') + 1, commit.author.indexOf(')'));
+         var nb = result.resultsMap.getOrDefault(substring, 0);
+         result.resultsMap.put(substring, nb + 1);
       }
       
       return result;
@@ -58,15 +60,17 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
    }
 
    /** This is the result class for this plugin. */
-   static class Result implements AnalyzerPlugin.Result {
+   static class Result extends AnalyzerShape implements AnalyzerPlugin.Result {
 
-      /** The hash map (unordered but faster) containing the count of commits per author. */
-      private final Map<String, Integer> commitsPerMail = new HashMap<>();
+
+      protected Result() {
+         super("Count commits per mail", ChartTypes.BAR);
+      }
 
       /** @return the result of the analysis as a string */
       @Override
       public String getResultAsString() {
-         return commitsPerMail.toString();
+         return this.resultsMap.toString();
       }
 
       /** @return the result of the analysis but as an html div. */
@@ -74,12 +78,27 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
       public String getResultAsHtmlDiv() {
          StringBuilder html = new StringBuilder("<div>Commits per mail : \n<ul>\n");
 
-         for (var item : commitsPerMail.entrySet())
+         for (var item : this.resultsMap.entrySet())
             html.append("<li>").append(item.getKey()).append(": ").append(item.getValue()).append("</li>\n");
 
          html.append("</ul>\n</div>\n");
 
          return html.toString();
+      }
+
+      @Override
+      public Map<String, Integer> getResults() {
+         return this.resultsMap;
+      }
+
+      @Override
+      public String getPluginName() {
+         return this.pluginName;
+      }
+
+      @Override
+      public String getChartType() {
+         return this.chartType.type;
       }
    }
 }

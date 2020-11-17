@@ -84,7 +84,7 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
 
         @Override
         public String getChartType() {
-            return this.chartType;
+            return this.chartType.type;
         }
 
         /** @return the result of this analysis, as a string. */
