@@ -6,8 +6,8 @@ import up.visulog.analyzer.ChartTypes;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 
-import java.util.List;
-import java.util.Map;
+import javax.xml.crypto.Data;
+import java.util.*;
 
 public class ProjectProgression implements AnalyzerPlugin {
 
@@ -18,17 +18,18 @@ public class ProjectProgression implements AnalyzerPlugin {
     public ProjectProgression(Configuration generalConfiguration) {
         this.configuration = generalConfiguration;
     }
+
+
     static Result processLog(List<Commit> gitLog) {
         var result = new Result();
 
+        gitLog.sort(Comparator.comparing((Commit c) -> c.date));
 
+        int i = 0;
         for (var commit : gitLog) {
-
-            var nb = result.resultsMap.getOrDefault(commit.date.toString(), 0);
-            result.resultsMap.put(commit.date.toString(), nb + 1);
+            result.resultsMap.put(commit.date.toString().substring(0, 10), i + 1);
+            i++;
         }
-
-
 
         return result;
     }
@@ -62,6 +63,8 @@ public class ProjectProgression implements AnalyzerPlugin {
         public Map<String, Integer> getResults() {
             return this.resultsMap;
         }
+
+
 
         @Override
         public String getPluginName() {

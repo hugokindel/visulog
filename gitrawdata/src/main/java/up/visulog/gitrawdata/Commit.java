@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * Class that represent a git commit with data such as id, date, etc
  */
-public class Commit {
+public class Commit implements Comparable<Commit>{
 
     public final String id;
     public final Date date;
@@ -158,5 +158,9 @@ public class Commit {
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+    @Override
+    public int compareTo(Commit o) {
+        return this.date.compareTo(o.date);
     }
 }
