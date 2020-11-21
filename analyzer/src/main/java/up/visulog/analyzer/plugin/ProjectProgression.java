@@ -25,10 +25,9 @@ public class ProjectProgression implements AnalyzerPlugin {
 
         gitLog.sort(Comparator.comparing((Commit c) -> c.date));
 
-        int i = 0;
         for (var commit : gitLog) {
-            result.resultsMap.put(commit.date.toString().substring(0, 10), i + 1);
-            i++;
+            var nb = result.resultsMap.getOrDefault(commit.date.toString().substring(0, 10), 0);
+            result.resultsMap.put(commit.date.toString().substring(0, 10), nb + 1);
         }
 
         return result;
@@ -56,7 +55,18 @@ public class ProjectProgression implements AnalyzerPlugin {
 
         @Override
         public String getResultAsHtmlDiv() {
-            return null;
+            StringBuilder html = new StringBuilder("<div>ProjectProgression : \n <ul>\n");
+            int a = 0;
+            String s="";
+            for (var item : this.resultsMap.entrySet()) {
+                a = a + item.getValue();
+                s= item.getKey();
+            }
+            html.append("<li> Number of all commits: ").append(a).append("</li>\n");
+            html.append("<li> Date of last modification: ").append(s).append("</li>\n");
+            html.append("</ul>\n</div>\n");
+
+            return html.toString();
         }
 
         @Override
