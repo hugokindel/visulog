@@ -57,13 +57,20 @@ public class ProjectProgression implements AnalyzerPlugin {
         public String getResultAsHtmlDiv() {
             StringBuilder html = new StringBuilder("<div>ProjectProgression : \n <ul>\n");
             int a = 0;
+            int max = -1;
+            String maxDate = null;
             String s="";
             for (var item : this.resultsMap.entrySet()) {
                 a = a + item.getValue();
+                if (item.getValue() > max) {
+                    max = item.getValue();
+                    maxDate = item.getKey();
+                }
                 s= item.getKey();
             }
-            html.append("<li> Number of all commits: ").append(a).append("</li>\n");
             html.append("<li> Date of last modification: ").append(s).append("</li>\n");
+            html.append("<li> Number of all commits: ").append(a).append("</li>\n");
+            html.append("<li> Date when there were the most commits: ").append(maxDate).append("</li>\n");
             html.append("</ul>\n</div>\n");
 
             return html.toString();
