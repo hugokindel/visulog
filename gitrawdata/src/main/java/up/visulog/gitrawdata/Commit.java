@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.AnyObjectId;
@@ -19,7 +20,7 @@ import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-
+*/
 
 /**
  * Class that represent a git commit with data such as id, date, etc
@@ -179,6 +180,7 @@ public class Commit {
      * Parses a log item and outputs a commit object. Exceptions will
      * be thrown in case the input does not have the proper format.
      */
+    /**
     public static Commit parse (Repository repo, AnyObjectId id) throws MissingObjectException, IncorrectObjectTypeException, IOException {
         try (RevWalk walk = new RevWalk(repo)) {
             RevCommit rCommit = walk.parseCommit(id);
@@ -186,18 +188,21 @@ public class Commit {
             return commitOfRevCommit(id, rCommit);
         }
     }
+    */
 
     /**
      * Transform a JGit revCommit into a regular Commit object.
      */
+    /**
     public static Commit commitOfRevCommit (AnyObjectId id, RevCommit rCommit){
         var  author = rCommit.getAuthorIdent();
         var name = author.getName();
         var email = author.getEmailAddress();
         var time = author.getWhen();//.getTime();
         // emailAddress is in the name string of the commit , we could add a @param emailAddress
-        var commit = new Commit(id.getName(), name + "(" + email+")", time, rCommit.getFullMessage());
+        var commit = new Commit(id.getName(), name + "(" + email+")", time, rCommit.getFullMessage()); // need one more @param mergedFrom
         return commit;
     }
+    */
 
 }
