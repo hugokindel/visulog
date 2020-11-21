@@ -1,26 +1,14 @@
 package up.visulog.gitrawdata;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Path;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-/**
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-*/
+
 
 /**
  * Class that represent a git commit with data such as id, date, etc
@@ -28,7 +16,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 public class Commit {
 
     public final String id;
-    public final Date date;
+    public final String date; // TODO : String format for date is a temporary solution
 
     /** Author of the commit. */
     public final String author;
@@ -36,8 +24,6 @@ public class Commit {
     /** Written description of the commit. */
     public final String description;
 
-    /** Name of the branch which the commit is merged from. */
-    public final String mergedFrom;
 
     /**
      *  Create a new Commit
@@ -46,141 +32,28 @@ public class Commit {
      * @param author Commit's author (mail)
      * @param date Commit's date
      * @param description Commit's message
-     * @param mergedFrom Branch the commit is mergedFrom
      */
-    public Commit(String id, String author, Date date, String description, String mergedFrom) {
+    public Commit(String id, String author, String date, String description) {
         this.id = id;
         this.author = author;
         this.date = date;
         this.description = description;
-        this.mergedFrom = mergedFrom;
-    }
-
-    /**
-     *  Generate a List of Commit from the git lo command
-     *
-     * @param gitPath command used (git log for the moment)
-     * @return a list of Commit
-     * @throws IOException is can't read the git.log file
-     */
-    public static List<Commit> parseLogFromCommand(Path gitPath) {
-        return parseLog(parseCommand(gitPath, "git", "log", "--date=format:%d/%m/%Y"));
-    }
-
-    /**
-     * Create a buffer from any git commands.
-     *
-     * @param path path to the git.log file (if needed).
-     * @param command used git command.
-     * @return a BufferedReader of the 'command'.
-     * @throws RuntimeException if the command can't be run
-     */
-    public static BufferedReader parseCommand(Path path, String... command) {
-        ProcessBuilder builder = new ProcessBuilder(command).directory(path.toFile());
-
-        Process process;
-        try {
-            process = builder.start();
-        } catch (IOException e) {
-            throw new RuntimeException("Error running \"" + command + "\"", e);
-        }
-        InputStream is = process.getInputStream();
-        return new BufferedReader(new InputStreamReader(is));
-    }
-
-    /**
-     * Read a buffer and convert it into a list of commit.
-     * @param reader the BufferedReader if the git command.
-     * @return a list of commits.
-     */
-    public static List<Commit> parseLog(BufferedReader reader) {
-        var result = new ArrayList<Commit>();
-        Optional<Commit> commit = parseCommit(reader);
-        while (commit.isPresent()) {
-            result.add(commit.get());
-            commit = parseCommit(reader);
-        }
-        return result;
-    }
-
-    /**
-     * Parses a log item and outputs a commit object. Exceptions will be thrown in case the input does not have the proper format.
-     * Returns an empty optional if there is nothing to parse anymore.
-     */
-    public static Optional<Commit> parseCommit(BufferedReader input) {
-        try {
-
-            var line = input.readLine();
-            if (line == null) return Optional.empty(); // if no line can be read, we are done reading the buffer
-            var idChunks = line.split(" ");
-            if (!idChunks[0].equals("commit")) parseError();
-            var builder = new CommitBuilder(idChunks[1]);
-
-            line = input.readLine();
-            while (!line.isEmpty()) {
-                var colonPos = line.indexOf(":");
-                var fieldName = line.substring(0, colonPos);
-                var fieldContent = line.substring(colonPos + 1).trim();
-                switch (fieldName) {
-                    case "Author":
-                        builder.setAuthor(fieldContent.replace('<', '(').replace('>', ')'));
-                        break;
-                    case "Merge":
-                        builder.setMergedFrom(fieldContent);
-                        break;
-                    case "Date":
-                        builder.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(fieldContent));
-                        break;
-                    default: // TODO: warn the user that some field was ignored
-                        System.out.println("A field was ignored,please fill it");
-                }
-                line = input.readLine(); //prepare next iteration
-                if (line == null) parseError(); // end of stream is not supposed to happen now (commit data incomplete)
-            }
-
-            // now read the commit message per se
-            var description = input
-                    .lines() // get a stream of lines to work with
-                    .takeWhile(currentLine -> !currentLine.isEmpty()) // take all lines until the first empty one (commits are separated by empty lines). Remark: commit messages are indented with spaces, so any blank line in the message contains at least a couple of spaces.
-                    .map(String::trim) // remove indentation
-                    .reduce("", (accumulator, currentLine) -> accumulator + currentLine); // concatenate everything
-            builder.setDescription(description);
-            return Optional.of(builder.createCommit());
-        } catch (IOException | ParseException e) {
-            parseError();
-        }
-        return Optional.empty(); // this is supposed to be unreachable, as parseError should never return
-    }
-
-    /**
-     * Helper function for generating parsing exceptions. This function *always* quits on an exception. It *never* returns.
-     */
-    private static void parseError() {
-        throw new RuntimeException("Wrong commit format.");
     }
 
     @Override
     public String toString() {
         return "Commit{" +
                 "id='" + id + '\'' +
-                (mergedFrom != null ? ("mergedFrom...='" + mergedFrom + '\'') : "") +
                 ", date='" + date + '\'' +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
 
-
-    /**
-     * parseLogFromCommand , parseLog , parseCommand , parseCommit , parseError
-     *  can be replaced by the following function using JGit
-     */
-
     /**
      * Parses a log item and outputs a commit object. Exceptions will
      * be thrown in case the input does not have the proper format.
      */
-    /**
     public static Commit parse (Repository repo, AnyObjectId id) throws MissingObjectException, IncorrectObjectTypeException, IOException {
         try (RevWalk walk = new RevWalk(repo)) {
             RevCommit rCommit = walk.parseCommit(id);
@@ -188,21 +61,27 @@ public class Commit {
             return commitOfRevCommit(id, rCommit);
         }
     }
-    */
+
 
     /**
      * Transform a JGit revCommit into a regular Commit object.
      */
-    /**
     public static Commit commitOfRevCommit (AnyObjectId id, RevCommit rCommit){
         var  author = rCommit.getAuthorIdent();
         var name = author.getName();
         var email = author.getEmailAddress();
-        var time = author.getWhen();//.getTime();
-        // emailAddress is in the name string of the commit , we could add a @param emailAddress
-        var commit = new Commit(id.getName(), name + "(" + email+")", time, rCommit.getFullMessage()); // need one more @param mergedFrom
-        return commit;
+        var time = author.getWhen().getTime();
+        return new Commit(id.getName(), name + " (" + email+")", stringOfTime(time), rCommit.getFullMessage());
     }
-    */
+
+    /**
+     * Transforms a time encoded as long into a string with
+     * the git log format.
+     */
+    static String stringOfTime(long time) {
+        var tmp = new SimpleDateFormat("dd : ww : yyyy");
+        return tmp.format(time);
+    }
+
 
 }

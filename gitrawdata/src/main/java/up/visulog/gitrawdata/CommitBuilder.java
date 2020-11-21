@@ -1,3 +1,9 @@
+/** TODO : delete CommitBuilder.java but need to change visulog.analyzer.test ,
+ * TestCountCommitPerAuthor use checkCommitSum() function (and constructor of CommitBuilder):
+ * l21 :  log.add(new CommitBuilder("-1").setAuthor(authors[i % 3]).createCommit());
+ * need to fix this before deleting CommitBuilder.java
+ */
+
 package up.visulog.gitrawdata;
 
 import java.util.Date;
@@ -8,7 +14,7 @@ import java.util.Date;
 public class CommitBuilder {
     private final String id;
     private String author;
-    private Date date;
+    private String date;
     private String description;
     private String mergedFrom;
 
@@ -32,7 +38,7 @@ public class CommitBuilder {
      * Set the date field (date of the commit)
      * @param date
      */
-    public CommitBuilder setDate(Date date) {
+    public CommitBuilder setDate(String date) {
         this.date = date;
         return this;
     }
@@ -47,19 +53,10 @@ public class CommitBuilder {
     }
 
     /**
-     * Set the mergedFrom field (the branch the commit is merged from)
-     * @param mergedFrom
-     */
-    public CommitBuilder setMergedFrom(String mergedFrom) {
-        this.mergedFrom = mergedFrom;
-        return this;
-    }
-
-    /**
      * Method to use to create a new commit form :
      * @return a Commit
      */
     public Commit createCommit() {
-        return new Commit(id, author, date, description, mergedFrom);
+        return new Commit(id, author, date, description);
     }
 }
