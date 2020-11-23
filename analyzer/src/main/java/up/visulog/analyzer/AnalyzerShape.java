@@ -1,11 +1,12 @@
 package up.visulog.analyzer;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class AnalyzerShape {
 
-   public Map<String, Integer> resultsMap = new HashMap<>();
+   public Map<String, Integer> resultsMap = new LinkedHashMap<>();
 
    public final String pluginName;
    public final ChartTypes chartType;

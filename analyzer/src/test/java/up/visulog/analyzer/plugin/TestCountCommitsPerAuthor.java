@@ -22,9 +22,9 @@ public class TestCountCommitsPerAuthor {
         }
 
         var res = CountCommitsPerAuthor.processLog(log);
-        assertEquals(authors.length, res.getCommitsPerAuthor().size());
+        assertEquals(authors.length, res.getResults().size());
 
-        var sum = res.getCommitsPerAuthor().values().stream().reduce(0, Integer::sum);
+        var sum = res.getResults().values().stream().reduce(0, Integer::sum);
         assertEquals(entries, sum.longValue());
     }
 }
