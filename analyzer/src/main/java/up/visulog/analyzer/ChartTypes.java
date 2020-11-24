@@ -6,7 +6,9 @@ public enum ChartTypes {
    BAR("bar"),
    AREA("area"),
    PIE("pie"),
-   DOUGHNUT("doughnut");
+   DOUGHNUT("doughnut"),
+   SPLINE_AREA("splineArea");
+
 
    public String type;
 

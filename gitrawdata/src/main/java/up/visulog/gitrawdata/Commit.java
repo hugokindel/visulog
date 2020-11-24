@@ -20,7 +20,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 /**
  * Class that represent a git commit with data such as id, date, etc
  */
-public class Commit {
+public class Commit implements Comparable<Commit>{
 
     public final String id;
     public final String date; // TODO : String format for date is a temporary solution
