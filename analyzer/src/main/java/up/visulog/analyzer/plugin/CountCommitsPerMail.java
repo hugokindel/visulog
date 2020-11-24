@@ -102,3 +102,4 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
          return this.chartType.type;
       }
    }
+}

@@ -107,4 +107,5 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
 
             return html.toString();
         }
-
+    }
+}
