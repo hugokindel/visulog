@@ -121,7 +121,7 @@ public class Visulog extends Runnable {
         if (config.isPresent()) {
             Analyzer analyzer = new Analyzer(config.get());
             AnalyzerResult results = analyzer.computeResults();
-            new Webgen(results,analyzer.getConfig().getPluginNames()).getFile();
+            new Webgen(results,analyzer.getConfig().getPluginNames()).getFile(gitPath);
         }
 
         return 0;

@@ -3,6 +3,7 @@
 
 # gradlew
 .gradle/
+output/
 
 # Java
 */build/
