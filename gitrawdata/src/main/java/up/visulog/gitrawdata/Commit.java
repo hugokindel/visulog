@@ -1,7 +1,14 @@
 package up.visulog.gitrawdata;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -40,6 +47,44 @@ public class Commit {
         this.description = description;
     }
 
+    /**
+     * Parse all commits from the repository at the given path.
+     *
+     * @param gitPath The path of the repository.
+     * @return a list of commits.
+     */
+    public static List<Commit> parseAllFromRepository(Path gitPath) {
+        try {
+            Git git = Git.open(new File(gitPath.toAbsolutePath().toString())) ;
+            Iterable<RevCommit> iterableCommits = git.log().all().call();
+            List<Commit> commits = new ArrayList<>();
+
+            for (RevCommit commit : iterableCommits) {
+                commits.add(revCommitToCommit(commit));
+            }
+
+            return commits;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Transform a JGit revCommit into a regular Commit object.
+     *
+     * @param rCommit The commit to transform.
+     * @return the commit.
+     */
+    private static Commit revCommitToCommit(RevCommit rCommit){
+        var  author = rCommit.getAuthorIdent();
+        var name = author.getName();
+        var email = author.getEmailAddress();
+        var time = author.getWhen().getTime();
+        return new Commit(rCommit.getId().getName(), name + " (" + email+")", stringOfTime(time), rCommit.getFullMessage());
+    }
+
     @Override
     public String toString() {
         return "Commit{" +
@@ -51,37 +96,11 @@ public class Commit {
     }
 
     /**
-     * Parses a log item and outputs a commit object. Exceptions will
-     * be thrown in case the input does not have the proper format.
-     */
-    public static Commit parse (Repository repo, AnyObjectId id) throws MissingObjectException, IncorrectObjectTypeException, IOException {
-        try (RevWalk walk = new RevWalk(repo)) {
-            RevCommit rCommit = walk.parseCommit(id);
-            walk.dispose();
-            return commitOfRevCommit(id, rCommit);
-        }
-    }
-
-
-    /**
-     * Transform a JGit revCommit into a regular Commit object.
-     */
-    public static Commit commitOfRevCommit (AnyObjectId id, RevCommit rCommit){
-        var  author = rCommit.getAuthorIdent();
-        var name = author.getName();
-        var email = author.getEmailAddress();
-        var time = author.getWhen().getTime();
-        return new Commit(id.getName(), name + " (" + email+")", stringOfTime(time), rCommit.getFullMessage());
-    }
-
-    /**
      * Transforms a time encoded as long into a string with
      * the git log format.
      */
-    static String stringOfTime(long time) {
-        var tmp = new SimpleDateFormat("dd : ww : yyyy");
+    private static String stringOfTime(long time) {
+        var tmp = new SimpleDateFormat("dd/ww/yyyy");
         return tmp.format(time);
     }
-
-
 }

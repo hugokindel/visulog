@@ -8,6 +8,7 @@ import up.visulog.gitrawdata.Commit;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This is an analyzer's plugin which goal is to count the
@@ -50,7 +51,7 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
     /** Run this analyzer plugin. */
     @Override
     public void run() {
-        result = processLog(Commit.parseLogFromCommand(configuration.getGitPath()));
+        result = processLog(Objects.requireNonNull(Commit.parseAllFromRepository(configuration.getGitPath())));
     }
 
     /** @return the result of this analysis. Runs the analysis first if not already done. */
@@ -107,6 +108,3 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
             return html.toString();
         }
 
-
-    }
-}

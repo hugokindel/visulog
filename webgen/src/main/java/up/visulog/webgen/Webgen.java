@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -36,40 +37,40 @@ public class Webgen {
    */
 
 
-   public void getFile() {
+   public void getFile(Path gitPath) {
       try {
          HtmlView view = StaticHtml
-               .view()
-               .html().attrLang("fr")
-                  .head()
-                     .meta().attrCharset("UTF-8").__()
-                     .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__()
-                     .title().text(this.pluginNames.toString()).__()
-                     .script().attrSrc("js/canvasjs.min.js").__()
-                  .__() //head
-                  .body()
-                     .header().attrClass("head")
-                        .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
-                        .span().text("VISULOG").__()
-                        .div().attrClass("phantomDiv").__()
-                     .__() // header
-                     .div().attrClass("results")
-                        .div().attrClass("pluginTextual")
-                           .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
-                        .__() // div.pluginTextual
-                        .div().attrClass("pluginGraphical")
-                           .text(createGraphsDivs())
-                        .__() // div.pluginGraphical
-                     .__() //div
-                     .script()
-                        .text("window.onload = function() {" + createScripts() + "}")
-                     .__()// script
-                  .__() //body
-               .__(); //html
+                 .view()
+                 .html().attrLang("fr")
+                 .head()
+                 .meta().attrCharset("UTF-8").__()
+                 .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__()
+                 .title().text(this.pluginNames.toString()).__()
+                 .script().attrSrc("js/canvasjs.min.js").__()
+                 .__() //head
+                 .body()
+                 .header().attrClass("head")
+                 .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
+                 .span().text("VISULOG").__()
+                 .div().attrClass("phantomDiv").__()
+                 .__() // header
+                 .div().attrClass("results")
+                 .div().attrClass("pluginTextual")
+                 .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
+                 .__() // div.pluginTextual
+                 .div().attrClass("pluginGraphical")
+                 .text(createGraphsDivs())
+                 .__() // div.pluginGraphical
+                 .__() //div
+                 .script()
+                 .text("window.onload = function() {" + createScripts() + "}")
+                 .__()// script
+                 .__() //body
+                 .__(); //html
 
 
          String html = view.render();
-         String fileName = "output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html";
+         String fileName = gitPath.toAbsolutePath().toString() + "/output/results-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html";
          PrintWriter p = new PrintWriter(fileName);
 
          p.write(html);
@@ -98,18 +99,18 @@ public class Webgen {
       int i = 0;
       for (AnalyzerPlugin.Result results : result.getSubResults()) {
          res.append("var chart")
-               .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
-               .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
-               .append("{           \n" +
-                     "                  animationEnabled: true,\n" +
-                     "                  theme: \"ligth2\",\n" +
-                     "                  title: {\n" +
-                     "                     text: \"").append(results.getPluginName()).append("\"")
-               .append("},\n" +
-                     "               data: [{\n" +
-                     "                  type: \"").append(results.getChartType()).append("\",")
-               .append("\n" +
-                     "               dataPoints: [");
+                 .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
+                 .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
+                 .append("{           \n" +
+                         "                  animationEnabled: true,\n" +
+                         "                  theme: \"ligth2\",\n" +
+                         "                  title: {\n" +
+                         "                     text: \"").append(results.getPluginName()).append("\"")
+                 .append("},\n" +
+                         "               data: [{\n" +
+                         "                  type: \"").append(results.getChartType()).append("\",")
+                 .append("\n" +
+                         "               dataPoints: [");
          for (var item : results.getResults().entrySet()) {
             res.append("{ y: ").append(item.getValue()).append(", label: \"").append(item.getKey()).append("\"},\n");
          }

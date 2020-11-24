@@ -12,7 +12,5 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TestCommit {
-
-     // TODO : @Test for parse function
-
+    // TODO : @Test
 }

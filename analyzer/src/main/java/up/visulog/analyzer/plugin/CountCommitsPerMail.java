@@ -9,6 +9,7 @@ import up.visulog.gitrawdata.Commit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -43,13 +44,13 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
          var nb = result.resultsMap.getOrDefault(substring, 0);
          result.resultsMap.put(substring, nb + 1);
       }
-      
+
       return result;
    }
 
    @Override
    public void run() {
-      this.result = processLog(Commit.parseLogFromCommand(configuration.getGitPath()));
+      this.result = processLog(Objects.requireNonNull(Commit.parseAllFromRepository(configuration.getGitPath())));
    }
 
    /** */
@@ -101,4 +102,3 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
          return this.chartType.type;
       }
    }
-}
