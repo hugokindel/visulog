@@ -94,13 +94,16 @@ public class Commit implements Comparable<Commit>{
                 ", description='" + description + '\'' +
                 '}';
     }
-
-    /**
-     * Transforms a time encoded as long into a string with
-     * the git log format.
-     */
+    @Override
+    public int compareTo(Commit o) {
+        return this.date.compareTo(o.date);
+    }
+        /**
+         * Transforms a time encoded as long into a string with
+         * the git log format.
+         */
     private static String stringOfTime(long time) {
-        var tmp = new SimpleDateFormat("dd/ww/yyyy");
+        var tmp = new SimpleDateFormat("MM/dd/yyyy");
         return tmp.format(time);
     }
 }
