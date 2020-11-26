@@ -55,6 +55,7 @@ public class BranchPlugin implements AnalyzerPlugin {
             for (var item : this.resultsMap.entrySet())
                 html.append("<li>").append(item.getKey()).append("</li>\n");
 
+            html.append("</ul>\n</div>\n");
             return html.toString();
         }
 
