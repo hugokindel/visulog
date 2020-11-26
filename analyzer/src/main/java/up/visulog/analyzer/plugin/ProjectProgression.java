@@ -26,8 +26,8 @@ public class ProjectProgression implements AnalyzerPlugin {
         gitLog.sort(Comparator.comparing((Commit c) -> c.date));
 
         for (var commit : gitLog) {
-            var nb = result.resultsMap.getOrDefault(commit.date.toString().substring(0, 10), 0);
-            result.resultsMap.put(commit.date.toString().substring(0, 10), nb + 1);
+            var nb = result.resultsMap.getOrDefault(commit.date, 0);
+            result.resultsMap.put(commit.date, nb + 1);
         }
 
         return result;
@@ -35,7 +35,7 @@ public class ProjectProgression implements AnalyzerPlugin {
 
     @Override
     public void run() {
-        this.result = processLog(Commit.parseLogFromCommand(configuration.getGitPath()));
+        this.result = processLog(Commit.parseAllFromRepository(configuration.getGitPath()));
     }
 
     @Override
