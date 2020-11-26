@@ -22,7 +22,7 @@ public class BranchPlugin implements AnalyzerPlugin {
         var result = new Result();
         int i=0;
         for (var branch : gitLog) {
-            result.resultsMap.put(branch.id.substring(0,8)+" "+branch.name.substring(20),i);
+            result.resultsMap.put(branch.name.substring(20) + " --- ID: "+branch.id.substring(0,8),i);
             i++;
         }
 
@@ -38,11 +38,11 @@ public class BranchPlugin implements AnalyzerPlugin {
         if (result == null) run();
         return result;
     }
+
     static class Result extends AnalyzerShape implements AnalyzerPlugin.Result{
 
-
         Result() {
-            super("BranchPlugin: ", ChartTypes.SPLINE_AREA);
+            super("BranchPlugin", ChartTypes.COLUMN);
         }
 
         @Override
@@ -63,8 +63,6 @@ public class BranchPlugin implements AnalyzerPlugin {
         public Map<String, Integer> getResults() {
             return this.resultsMap;
         }
-
-
 
         @Override
         public String getPluginName() {
