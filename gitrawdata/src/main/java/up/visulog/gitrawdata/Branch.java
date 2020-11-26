@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 public class Branch {
     public final String id;
     public final String name;
@@ -29,5 +30,17 @@ public class Branch {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static Branch revBranchToBranch(Ref ref) {
+        var  id = ref.getObjectId().getName();
+        var name = ref.getName();
+        return new Branch(id , name);
+    }
+    public String toString(){
+        return "Branch{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
