@@ -56,7 +56,7 @@ public class Commit implements Comparable<Commit>{
     public static List<Commit> parseAllFromRepository(Path gitPath) {
         try {
             Git git = Git.open(new File(gitPath.toAbsolutePath().toString())) ;
-            Iterable<RevCommit> iterableCommits = git.log().all().call();
+            Iterable<RevCommit> iterableCommits = git.log().call();
             List<Commit> commits = new ArrayList<>();
 
             for (RevCommit commit : iterableCommits) {
