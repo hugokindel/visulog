@@ -42,7 +42,7 @@ public class BranchPlugin implements AnalyzerPlugin {
     static class Result extends AnalyzerShape implements AnalyzerPlugin.Result{
 
         Result() {
-            super("BranchPlugin", ChartTypes.COLUMN);
+            super("BranchPlugin", ChartTypes.POUBELLE);
         }
 
         @Override
