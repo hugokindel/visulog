@@ -1,20 +1,13 @@
 package up.visulog.gitrawdata;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.revwalk.RevCommit;
+
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.AnyObjectId;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 
 
 /**
