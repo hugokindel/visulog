@@ -40,33 +40,33 @@ public class Webgen {
    public void getFile(Path gitPath) {
       try {
          HtmlView view = StaticHtml
-                 .view()
-                 .html().attrLang("fr")
-                 .head()
-                 .meta().attrCharset("UTF-8").__()
-                 .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__()
-                 .title().text(this.pluginNames.toString()).__()
-                 .script().attrSrc("js/canvasjs.min.js").__()
-                 .__() //head
-                 .body()
-                 .header().attrClass("head")
-                 .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
-                 .span().text("VISULOG").__()
-                 .div().attrClass("phantomDiv").__()
-                 .__() // header
-                 .div().attrClass("results")
-                 .div().attrClass("pluginTextual")
-                 .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
-                 .__() // div.pluginTextual
-                 .div().attrClass("pluginGraphical")
-                 .text(createGraphsDivs())
-                 .__() // div.pluginGraphical
-                 .__() //div
-                 .script()
-                 .text("window.onload = function() {" + createScripts() + "}")
-                 .__()// script
-                 .__() //body
-                 .__(); //html
+               .view()
+               .html().attrLang("fr")
+               .head()
+               .meta().attrCharset("UTF-8").__()
+               .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__()
+               .title().text(this.pluginNames.toString()).__()
+               .script().attrSrc("js/canvasjs.min.js").__()
+               .__() //head
+               .body()
+               .header().attrClass("head")
+               .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
+               .span().text("VISULOG").__()
+               .div().attrClass("phantomDiv").__()
+               .__() // header
+               .div().attrClass("results")
+               .div().attrClass("pluginTextual")
+               .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
+               .__() // div.pluginTextual
+               .div().attrClass("pluginGraphical")
+               .text(createGraphsDivs())
+               .__() // div.pluginGraphical
+               .__() //div
+               .script()
+               .text("window.onload = function() {" + createScripts() + "}")
+               .__()// script
+               .__() //body
+               .__(); //html
 
 
          String html = view.render();
@@ -99,18 +99,18 @@ public class Webgen {
       int i = 0;
       for (AnalyzerPlugin.Result results : result.getSubResults()) {
          res.append("var chart")
-                 .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
-                 .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
-                 .append("{           \n" +
-                         "                  animationEnabled: true,\n" +
-                         "                  theme: \"ligth2\",\n" +
-                         "                  title: {\n" +
-                         "                     text: \"").append(results.getPluginName()).append("\"")
-                 .append("},\n" +
-                         "               data: [{\n" +
-                         "                  type: \"").append(results.getChartType()).append("\",")
-                 .append("\n" +
-                         "               dataPoints: [");
+               .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
+               .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
+               .append("{           \n" +
+                     "                  animationEnabled: true,\n" +
+                     "                  theme: \"ligth2\",\n" +
+                     "                  title: {\n" +
+                     "                     text: \"").append(results.getPluginName()).append("\"")
+               .append("},\n" +
+                     "               data: [{\n" +
+                     "                  type: \"").append(results.getChartType()).append("\",")
+               .append("\n" +
+                     "               dataPoints: [");
          for (var item : results.getResults().entrySet()) {
             res.append("{ y: ").append(item.getValue()).append(", label: \"").append(item.getKey()).append("\"},\n");
          }
