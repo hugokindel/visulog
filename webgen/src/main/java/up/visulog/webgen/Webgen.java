@@ -3,6 +3,8 @@ package up.visulog.webgen;
 import htmlflow.HtmlView;
 import htmlflow.StaticHtml;
 import org.xmlet.htmlapifaster.EnumRelType;
+import org.xmlet.htmlapifaster.Head;
+import org.xmlet.htmlapifaster.Html;
 import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerResult;
 
@@ -37,36 +39,45 @@ public class Webgen {
    */
 
 
-   public void getFile(Path gitPath, boolean open) {
+   public void getFile(Path gitPath, boolean open, String[] cssToAdd) {
       try {
-         HtmlView view = StaticHtml
+         Head<Html<HtmlView>> head = StaticHtml
                  .view()
                  .html().attrLang("fr")
                  .head()
                  .meta().attrCharset("UTF-8").__()
-                 .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__()
-                 .title().text(this.pluginNames.toString()).__()
-                 .script().attrSrc("js/canvasjs.min.js").__()
-                 .__() //head
-                 .body()
-                 .header().attrClass("head")
-                 .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
-                 .span().text("VISULOG").__()
-                 .div().attrClass("phantomDiv").__()
-                 .__() // header
-                 .div().attrClass("results")
-                 .div().attrClass("pluginTextual")
-                 .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
-                 .__() // div.pluginTextual
-                 .div().attrClass("pluginGraphical")
-                 .text(createGraphsDivs())
-                 .__() // div.pluginGraphical
-                 .__() //div
-                 .script()
-                 .text("window.onload = function() {" + createScripts() + "}")
-                 .__()// script
-                 .__() //body
-                 .__(); //html
+                 .link().attrRel(EnumRelType.STYLESHEET).attrHref("css/style.css").__();
+
+         if (cssToAdd != null) {
+            for (int i = 0; i < cssToAdd.length; i++) {
+               head = head.link().attrRel(EnumRelType.STYLESHEET).attrHref(cssToAdd[i]).__();
+            }
+         }
+
+         HtmlView view =
+                 head
+                         .title().text(this.pluginNames.toString()).__()
+                         .script().attrSrc("js/canvasjs.min.js").__()
+                         .__() //head
+                         .body()
+                         .header().attrClass("head")
+                         .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc("css/git-hub.png").__().__()
+                         .span().text("VISULOG").__()
+                         .div().attrClass("phantomDiv").__()
+                         .__() // header
+                         .div().attrClass("results")
+                         .div().attrClass("pluginTextual")
+                         .text(result.getSubResults().stream().map(AnalyzerPlugin.Result::getResultAsHtmlDiv).reduce("", (acc, cur) -> acc + cur))
+                         .__() // div.pluginTextual
+                         .div().attrClass("pluginGraphical")
+                         .text(createGraphsDivs())
+                         .__() // div.pluginGraphical
+                         .__() //div
+                         .script()
+                         .text("window.onload = function() {" + createScripts() + "}")
+                         .__()// script
+                         .__() //body
+                         .__(); //html
 
 
          String html = view.render();
