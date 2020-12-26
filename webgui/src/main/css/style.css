@@ -23,10 +23,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 25px;
+    font-size: 3vh;
     font-weight: 600;
-    letter-spacing: 1px;
-    width: 90%;
+    width: 190vh;
 }
 
 .content {
@@ -49,7 +48,7 @@ body {
 .content > div {
     display: flex;
     justify-content: space-around;
-    width: 95%;
+    width: 240vh;
     height: 74vh;
 }
 
@@ -57,20 +56,20 @@ body {
     background-color: white;
     border-radius: 2vh;
     width: 100vh;
-    height: 100%;
-    box-shadow: 8px 8px 10px darkgray;
+    height: 75vh;
+    box-shadow: 1vh 1vh 2vh darkgray;
 }
 
 .about {
     width: 60vh;
     color: white;
-    margin-top: 20px;
+    margin-top: 3vh;
 }
 
 form {
-    margin: 30px 30px 30px 75px;
-    width: calc(100% - 105px);
-    height: calc(100% - 60px);
+    margin: 4vh auto 4vh auto;
+    width: 85%;
+    height: calc(100% - 8vh);
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -78,40 +77,70 @@ form {
 }
 
 form input {
-    height: 35px;
-    border-radius: 25px;
+    height: 5vh;
+    border-radius: 4vh;
     outline-style: none;
     border: none;
     color: white;
-    font-size: 17px;
+    font-size: 2.5vh;
     font-weight: 500;
-}
-
-.line {
-    width: 200px;
-    height: 1px;
-    margin-left: 40px;
-    background-color: #5A5A5A;
 }
 
 .link {
     background-color: #909090;
-    width: 300px;
-    padding-left: 17px;
-    font-size: 14px;
+    width: 40vh;
+    padding-left: 3vh;
+    font-size: 1.7vh;
 }
 
 .link::placeholder {
     color: white;
-    font-size: 17px;
+    font-size: 2.2vh;
     font-weight: 600;
+}
+
+.line {
+    width: 30vh;
+    height: 0.3vh;
+    margin-left: 5vh;
+    background-color: #5A5A5A;
+}
+
+.selectPlugin {
+    height: 40vh;
+    width: 100%;
+    background-color: #909090;
+    border-radius: 2vh;
+}
+
+.contentPlugin {
+    margin: 3vh;
+    height: calc(100% - 3vh);
+}
+
+.scrollPlugin {
+    width: 95%;
+    font-size: 2vh;
+    margin: 2.7vh auto 0 auto;
+    overflow-y: auto;
+    height: 29vh;
+    color: white;
+}
+
+.scrollPlugin::-webkit-scrollbar {
+    width: 0.75vh;
+}
+
+.scrollPlugin::-webkit-scrollbar-thumb {
+    background: #5A5A5A;
+    border-radius: 3vh;
 }
 
 .submit {
     background-color: #292961;
-    width: 130px;
+    width: 20vh;
     margin: 0 auto 0 auto;
-    transform: translateX(-30px);
+    transform: translateX(-4vh);
     cursor: pointer;
 }
 
@@ -119,42 +148,12 @@ form input {
     animation: infinite ease-in-out 1s hoverSubmit;
 }
 
-.selectPlugin {
-    height: 250px;
-    width: 550px;
-    background-color: #909090;
-    border-radius: 15px;
-}
-
-.contentPlugin {
-    margin: 20px;
-    height: calc(100% - 40px);
-}
-
-.scrollPlugin {
-    width: 95%;
-    margin: 15px auto 0 auto;
-    overflow-y: auto;
-    height: 170px;
-    color: white;
-}
-
-.scrollPlugin::-webkit-scrollbar {
-    width: 6px;
-}
-
-
-.scrollPlugin::-webkit-scrollbar-thumb {
-    background: #5A5A5A;
-    border-radius: 15px;
-}
-
 
 .toggle {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    max-width: 200px;
+    max-width: 17vh;
 }
 .toggle input[type=checkbox] {
     height: 0;
@@ -165,43 +164,41 @@ form input {
     background: #383838;
 }
 .toggle input[type=checkbox]:checked + label:after {
-    left: calc(100% - 2px);
+    left: calc(100% - 0.5vh);
     transform: translateX(-100%);
 }
 .toggle label {
     cursor: pointer;
-    width: 75px;
-    height: 34px;
+    width: 15vh;
+    height: 3vh;
     background: rgba(0, 0, 0, 0.27);
     display: block;
-    border-radius: 40px;
+    border-radius: 20vh;
     position: relative;
 }
 .toggle label:after {
     content: "";
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 30px;
-    height: 30px;
+    width: 3vh;
+    height: 3vh;
     background: #fff;
-    border-radius: 40px;
+    border-radius: 20vh;
     transition: 0.3s;
 }
 .toggle span {
-    font-size: 18px;
+    font-size: 2vh;
 }
 
 
 
 @keyframes hoverSubmit {
     0% {
-        transform: scale(1) translateX(-30px);
+        transform: scale(1) translateX(-4vh);
     }
     50% {
-        transform: scale(1.1) translateX(-30px);
+        transform: scale(1.1) translateX(-4vh);
     }
     100% {
-        transform: scale(1) translateX(-30px);
+        transform: scale(1) translateX(-4vh);
     }
 }
