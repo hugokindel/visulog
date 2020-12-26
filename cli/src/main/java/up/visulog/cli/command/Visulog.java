@@ -40,6 +40,10 @@ public class Visulog extends Runnable {
     @Option(names = {"-l", "--save-config"}, description = "Save the configuration file of this command call.")
     protected String saveConfig;
 
+    /** Option to specify to not automatically open the result in the browser. */
+    @Option(names = {"--n-open"}, description = "Specifies that we should not automatically launches the result in the browser.")
+    protected boolean dontOpen;
+
     /** Class constructor. */
     public Visulog() {
         super();
@@ -121,7 +125,7 @@ public class Visulog extends Runnable {
         if (config.isPresent()) {
             Analyzer analyzer = new Analyzer(config.get());
             AnalyzerResult results = analyzer.computeResults();
-            new Webgen(results,analyzer.getConfig().getPluginNames()).getFile(gitPath);
+            new Webgen(results,analyzer.getConfig().getPluginNames()).getFile(gitPath, !dontOpen);
         }
 
         return 0;

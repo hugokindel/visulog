@@ -37,7 +37,7 @@ public class Webgen {
    */
 
 
-   public void getFile(Path gitPath) {
+   public void getFile(Path gitPath, boolean open) {
       try {
          HtmlView view = StaticHtml
                  .view()
@@ -76,7 +76,9 @@ public class Webgen {
          p.write(html);
          p.close();
 
-         Desktop.getDesktop().open(new File(fileName));
+         if (open) {
+            Desktop.getDesktop().open(new File(fileName));
+         }
 
       } catch (IOException e) {
          e.printStackTrace();
