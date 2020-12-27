@@ -29,7 +29,6 @@ body {
 }
 
 .content {
-    background-color: #CACACA;
     height: 92vh;
     width: 100%;
     z-index: 0;
@@ -53,11 +52,9 @@ body {
 }
 
 .form {
-    background-color: white;
     border-radius: 2vh;
     width: 100vh;
     height: 75vh;
-    box-shadow: 1vh 1vh 2vh darkgray;
 }
 
 .about {
@@ -66,7 +63,7 @@ body {
     margin-top: 3vh;
 }
 
-form {
+#main-form {
     margin: 4vh auto 4vh auto;
     width: 85%;
     height: calc(100% - 8vh);
@@ -76,7 +73,7 @@ form {
     align-items: start;
 }
 
-form input {
+#main-form input {
     height: 5vh;
     border-radius: 4vh;
     outline-style: none;
