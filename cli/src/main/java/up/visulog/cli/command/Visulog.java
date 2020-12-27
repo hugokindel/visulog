@@ -40,6 +40,11 @@ public class Visulog extends Runnable {
     @Option(names = {"-l", "--save-config"}, description = "Save the configuration file of this command call.")
     protected String saveConfig;
 
+    /** Option to output the list of plugins that can be used. */
+    @Option(names = {"--list-plugins"}, description = "Output the list of plugins that can be used.")
+    protected boolean listPlugins;
+
+
     /** Class constructor. */
     public Visulog() {
         super();
@@ -59,6 +64,23 @@ public class Visulog extends Runnable {
 
         Path gitPath;
 
+        if (listPlugins) {
+            try {
+                List<String> listClasses = Analyzer.getPluginsList();
+                StringBuilder list = new StringBuilder();
+
+                for (int i = 0; i < listClasses.size(); i++) {
+                    list.append(i == 0 ? "" : ",").append(listClasses.get(i));
+                }
+
+                System.out.println(list.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return 0;
+        }
+        
         if (value.isEmpty()) {
             gitPath = FileSystems.getDefault().getPath(".");
         } else {
