@@ -9,7 +9,7 @@ public class TestVisulog {
     @Test
     public void testArgumentParser() {
         Visulog visulog = new Visulog();
-        visulog.run(new String[] {"..", "--plugins=CountCommitsPerAuthor"});
+        visulog.run(new String[] {"..", "--plugins=CountCommitsPerAuthor", "--n-open"});
         assertEquals("..", visulog.getValue());
         assertEquals("CountCommitsPerAuthor", visulog.plugins[0]);
     }
@@ -18,7 +18,7 @@ public class TestVisulog {
     @Test
     public void testProgramWithRealArguments() {
         Visulog visulog = new Visulog();
-        visulog.run(new String[] {"..", "--plugins=CountCommitsPerAuthor,CountLinesPerAuthor"});
+        visulog.run(new String[] {"..", "--plugins=CountCommitsPerAuthor,CountLinesPerAuthor", "--n-open"});
         assertEquals("CountCommitsPerAuthor", visulog.plugins[0]);
         assertEquals("CountLinesPerAuthor", visulog.plugins[1]);
 
