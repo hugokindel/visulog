@@ -148,7 +148,7 @@ findListOfPlugins();
 								</div>
 							</div>
 						</div>
-						<input class="submit" type="submit" value="Start !">
+						<input class="submit" type="submit" value="Obtenir le résultat">
 					</form>
 				</div>
 				<div class="about">
