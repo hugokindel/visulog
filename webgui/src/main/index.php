@@ -1,8 +1,12 @@
 <?php
 $serverTimezone = "Europe/Paris";
 $serverLocale = "fr_FR.UTF-8";
+$listPlugins = null;
+$fileCreated = "";
+$path = "";
+$selectedPlugins = null;
 
-function init() {
+function start() {
 	global $serverTimezone;
 	global $serverLocale;
 
@@ -28,10 +32,30 @@ function setThemeName($name) {
 }
 
 function reload() {
-	header("Location: "."http://".$_SERVER['HTTP_HOST']."/visulog");
+	header("Location: ".(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
 }
 
-init();
+function findListOfPlugins() {
+	global $listPlugins;
+
+	exec("cli --list-plugins", $listPluginsCommand, $retval);
+	$listPlugins = explode(",", $listPluginsCommand[0]);
+}
+
+function startsWith( $haystack, $needle ) {
+     $length = strlen( $needle );
+     return substr( $haystack, 0, $length ) === $needle;
+}
+
+function endsWith( $haystack, $needle ) {
+    $length = strlen( $needle );
+    if( !$length ) {
+        return true;
+    }
+    return substr( $haystack, -$length ) === $needle;
+}
+
+start();
 
 if (isset($_POST["themeChanged"])) {
 	if (isset($_POST["theme"])) {
@@ -41,7 +65,24 @@ if (isset($_POST["themeChanged"])) {
 	}
 
 	reload();
+} else if (isset($_POST["resultAsked"])) {
+	if (count($_POST["plugins"]) > 0) {
+		$path = $_POST["path"];
+		$path = str_replace("\\", "/", $path);
+		$plugins = "";
+
+		for ($i = 0; $i < count($_POST["plugins"]); $i++) {
+			$plugins = $plugins.$_POST["plugins"][$i].($i < count($_POST["plugins"]) - 1 ? "," : "");
+		}
+
+		$selectedPlugins = $plugins;
+
+		exec("cli $path --plugins=$plugins --get-result", $output, $retval);
+		$fileCreated = $output[0];
+	}
 }
+
+findListOfPlugins();
 ?>
 
 <!DOCTYPE html>
@@ -58,6 +99,16 @@ if (isset($_POST["themeChanged"])) {
 	<title>visulog</title>
 </head>
 <body>
+	<?php if(!empty($fileCreated)) { ?>
+	    <script type="text/javascript">
+	        window.open("<?php echo $fileCreated; ?>", '_blank');
+	        window.location.href = window.location.protocol + '//' + 
+	       		window.location.host + window.location.pathname +
+	       		"?path=" + encodeURI("<?php echo $path; ?>") +
+	       		"&plugins=" + encodeURI("<?php echo $selectedPlugins; ?>");
+	    </script>
+	<?php  } ?>
+
 	<div class="root">
 		<div class="top">
 			<div class="topContent">
@@ -78,14 +129,22 @@ if (isset($_POST["themeChanged"])) {
 			<div>
 				<div class="form">
 					<form id="main-form" action="" method="post">
-						<input class="link" type="text" required placeholder="Project's link">
+						<input name="resultAsked" type="hidden" value="1">
+						<input class="link" type="text" name="path" required placeholder="Chemin d'accès de dépôt" value="<?php echo (isset($_GET['path']) ? $_GET['path'] : '');?>">
 						<div class="line"></div>
 						<div class="selectPlugin">
 							<div class="contentPlugin">
-								<h1 style="color: white; font-size: 2.2vh; font-weight: 600;">My plugins :</h1>
+								<h1 style="color: white; font-size: 2.2vh; font-weight: 600;">Plugins disponibles :</h1>
 								<div class="scrollPlugin">
-									<!-- TODO: ajouter la liste des plugins -->
+									<?php
+									for($i = 0; $i < count($listPlugins); $i++) {
+										$check = isset($_GET["plugins"]) && (strpos($_GET["plugins"], $listPlugins[$i].",") !== false || endsWith($_GET["plugins"], $listPlugins[$i]));
 
+										echo "<input type='checkbox' id='checkbox$listPlugins[$i]' name='plugins[]' value='$listPlugins[$i]' ".($check ? "checked=\"\"" : "").">";
+										echo "<label for='checkbox$listPlugins[$i]'>$listPlugins[$i]</label>";
+										echo "<br>";
+									}
+									?>
 								</div>
 							</div>
 						</div>

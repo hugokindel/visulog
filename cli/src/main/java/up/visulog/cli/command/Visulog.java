@@ -44,6 +44,9 @@ public class Visulog extends Runnable {
     @Option(names = {"--list-plugins"}, description = "Output the list of plugins that can be used.")
     protected boolean listPlugins;
 
+    /** Option to output the name of the result file. */
+    @Option(names = {"--get-result"}, description = "Output the name of the result file.")
+    protected boolean getResult;
 
     /** Class constructor. */
     public Visulog() {
@@ -143,7 +146,7 @@ public class Visulog extends Runnable {
         if (config.isPresent()) {
             Analyzer analyzer = new Analyzer(config.get());
             AnalyzerResult results = analyzer.computeResults();
-            new Webgen(results,analyzer.getConfig().getPluginNames()).getFile(gitPath);
+            new Webgen(results,analyzer.getConfig().getPluginNames()).getFile(gitPath, getResult);
         }
 
         return 0;
