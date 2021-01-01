@@ -111,25 +111,27 @@ public class Webgen {
       StringBuilder res = new StringBuilder();
       int i = 0;
       for (AnalyzerPlugin.Result results : result.getSubResults()) {
-         res.append("var chart")
-                 .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
-                 .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
-                 .append("{           \n" +
-                         "                  animationEnabled: true,\n" +
-                         "                  theme: \"ligth2\",\n" +
-                         "                  title: {\n" +
-                         "                     text: \"").append(results.getPluginName()).append("\"")
-                 .append("},\n" +
-                         "               data: [{\n" +
-                         "                  type: \"").append(results.getChartType()).append("\",")
-                 .append("\n" +
-                         "               dataPoints: [");
-         for (var item : results.getResults().entrySet()) {
-            res.append("{ y: ").append(item.getValue()).append(", label: \"").append(item.getKey()).append("\"},\n");
+         if(!results.getChartType().equals("")) {
+            res.append("var chart")
+                    .append(results.getPluginName().replace(" ", "")).append(i).append(" = new CanvasJS.Chart(\"")
+                    .append(results.getPluginName().replace(" ", "")).append(i).append("\",")
+                    .append("{           \n" +
+                            "                  animationEnabled: true,\n" +
+                            "                  theme: \"ligth2\",\n" +
+                            "                  title: {\n" +
+                            "                     text: \"").append(results.getPluginName()).append("\"")
+                    .append("},\n" +
+                            "               data: [{\n" +
+                            "                  type: \"").append(results.getChartType()).append("\",")
+                    .append("\n" +
+                            "               dataPoints: [");
+            for (var item : results.getResults().entrySet()) {
+               res.append("{ y: ").append(item.getValue()).append(", label: \"").append(item.getKey()).append("\"},\n");
+            }
+            res.append("]\n}\n]\n});\n");
+            res.append("chart").append(results.getPluginName().replace(" ", "")).append(i).append(".render();\n");
+            i++;
          }
-         res.append("]\n}\n]\n});\n");
-         res.append("chart").append(results.getPluginName().replace(" ", "")).append(i).append(".render();\n");
-         i++;
       }
       return res.toString();
    }
