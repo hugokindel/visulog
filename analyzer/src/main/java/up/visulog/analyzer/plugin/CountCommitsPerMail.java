@@ -40,9 +40,8 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
       var result = new Result();
 
       for (var commit : gitLog) {
-         var substring = commit.author.substring(commit.author.indexOf('(') + 1, commit.author.indexOf(')'));
-         var nb = result.resultsMap.getOrDefault(substring, 0);
-         result.resultsMap.put(substring, nb + 1);
+         var nb = result.resultsMap.getOrDefault(commit.mail, 0);
+         result.resultsMap.put(commit.mail, nb + 1);
       }
 
       return result;

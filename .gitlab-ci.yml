@@ -1,0 +1,27 @@
+image: gradle:6.6.1-jdk11
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dhttp.proxyHost=193.254.199.96 -Dhttp.proxyPort=3128 -Dhttps.proxyHost=194.254.199.96 -Dhttps.proxyPort=3128"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+build:
+  stage: build
+  script: gradle --build-cache assemble
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: push
+    paths:
+      - build
+      - .gradle
+
+test:
+  stage: test
+  script: gradle check
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle

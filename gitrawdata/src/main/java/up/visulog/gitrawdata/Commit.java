@@ -1,5 +1,15 @@
 package up.visulog.gitrawdata;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -16,14 +26,20 @@ import org.eclipse.jgit.revwalk.RevCommit;
 public class Commit implements Comparable<Commit>{
 
     public final String id;
-    public final String date; // TODO : String format for date is a temporary solution
 
-    /** Author of the commit. */
+    public final String date;
+
     public final String author;
 
-    /** Written description of the commit. */
+    public final String mail;
+
     public final String description;
 
+    public final int numberOfLinesAdded;
+
+    public final int numberOfLinesRemoved;
+
+    public final int numberOfFilesChanged;
 
     /**
      *  Create a new Commit
@@ -33,11 +49,15 @@ public class Commit implements Comparable<Commit>{
      * @param date Commit's date
      * @param description Commit's message
      */
-    public Commit(String id, String author, String date, String description) {
+    public Commit(String id, String author, String date, String mail, String description, int numberOfLinesAdded, int numberOfLinesRemoved, int numberOfFilesChanged) {
         this.id = id;
         this.author = author;
         this.date = date;
+        this.mail = mail;
         this.description = description;
+        this.numberOfLinesAdded = numberOfLinesAdded;
+        this.numberOfLinesRemoved = numberOfLinesRemoved;
+        this.numberOfFilesChanged = numberOfFilesChanged;
     }
 
     /**
@@ -49,11 +69,11 @@ public class Commit implements Comparable<Commit>{
     public static List<Commit> parseAllFromRepository(Path gitPath) {
         try {
             Git git = Git.open(new File(gitPath.toAbsolutePath().toString())) ;
-            Iterable<RevCommit> iterableCommits = git.log().all().call();
+            Iterable<RevCommit> iterableCommits = git.log().call();
             List<Commit> commits = new ArrayList<>();
 
             for (RevCommit commit : iterableCommits) {
-                commits.add(revCommitToCommit(commit));
+                commits.add(revCommitToCommit(commit, git));
             }
 
             return commits;
@@ -70,12 +90,39 @@ public class Commit implements Comparable<Commit>{
      * @param rCommit The commit to transform.
      * @return the commit.
      */
-    private static Commit revCommitToCommit(RevCommit rCommit){
-        var  author = rCommit.getAuthorIdent();
-        var name = author.getName();
-        var email = author.getEmailAddress();
-        var time = author.getWhen().getTime();
-        return new Commit(rCommit.getId().getName(), name + " (" + email+")", stringOfTime(time), rCommit.getFullMessage());
+    private static Commit revCommitToCommit(RevCommit rCommit, Git git) {
+        PersonIdent author = rCommit.getAuthorIdent();
+        String name = author.getName();
+        String email = author.getEmailAddress();
+        String time = stringOfTime(author.getWhen().getTime());
+        int numberOfLinesAdded = 0;
+        int numberOfLinesDeleted = 0;
+        int numberOfFilesChanged = 0;
+
+        try {
+            if (rCommit.getParentCount() > 0) {
+                RevCommit parent = new RevWalk(git.getRepository()).parseCommit(rCommit.getParent(0).getId());
+                DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
+                df.setRepository(git.getRepository());
+                df.setDiffComparator(RawTextComparator.DEFAULT);
+                df.setDetectRenames(true);
+                List<DiffEntry> diffs;
+                diffs = df.scan(parent.getTree(), rCommit.getTree());
+                numberOfFilesChanged = diffs.size();
+                for (DiffEntry diff : diffs) {
+                    for (Edit edit : df.toFileHeader(diff).toEditList()) {
+                        numberOfLinesAdded += edit.getEndB() - edit.getBeginB();
+                        numberOfLinesDeleted += edit.getEndA() - edit.getBeginA();
+                    }
+                }
+            }
+
+            return new Commit(rCommit.getId().getName(), name, time, email, rCommit.getFullMessage(), numberOfLinesAdded, numberOfLinesDeleted, numberOfFilesChanged);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override

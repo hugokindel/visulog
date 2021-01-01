@@ -145,3 +145,31 @@ Révision des semaines 7 et 8
 
 - Implémenter JGit.
 - Ajouter et fonctionnalités répondants aux user-stories (majoritairement des plugins et options de commandes) maintenant que la majorité du logiciel est bien intégré.
+
+## Réunion de la semaine 11
+
+Révision des semaines 9 et 10
+
+### Travail effectué
+
+- Issues réalisés (merge requests correspondantes fermés):
+	- #25 - @hugokindel
+	- #34 - @clipal @payet
+	- #28 - @mohamedc @jauroyon
+	- #39 - @payet
+	- #42 - @somon
+	- #41 - supprimé
+- Issues en cours de réalisation:
+	- #43 - @hugokindel @allano
+- À réaliser:
+	- #36 @all
+	- #37 @all
+	- #38 @all
+
+### Rétrospective des problèmes rencontrés
+
+- Globalement OK, mais examens qui font que les participations aux projets en ce moment sont réduites.
+
+### Planification des semaines à venir
+
+- Finaliser le projet en ajoutant des fonctionnalités toujours dans le but de répondre à des user-stories.
