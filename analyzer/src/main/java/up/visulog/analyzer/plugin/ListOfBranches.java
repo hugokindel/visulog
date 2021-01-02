@@ -33,7 +33,7 @@ public class ListOfBranches implements AnalyzerPlugin {
 
     @Override
     public void run() {
-        this.result = processLog(Objects.requireNonNull(Branch.parseAll(configuration.repo)));
+        this.result = processLog(Objects.requireNonNull(Branch.parseAll(configuration.repo, true)));
     }
 
     @Override

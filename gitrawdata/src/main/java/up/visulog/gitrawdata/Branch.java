@@ -21,11 +21,11 @@ public class Branch {
         this.name = name;
     }
 
-    public static List<Branch> parseAll(Repo repo) {
+    public static List<Branch> parseAll(Repo repo, boolean onlyRemote) {
         try {
             List<Branch> branches = new ArrayList<>();
-
-            for (Ref ref : repo.git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call()) {
+            ListBranchCommand.ListMode listMode = onlyRemote ? ListBranchCommand.ListMode.REMOTE : ListBranchCommand.ListMode.ALL;
+            for (Ref ref : repo.git.branchList().setListMode(listMode).call()) {
                 branches.add(parseFromJGit(repo, ref));
             }
             return branches;
@@ -38,13 +38,12 @@ public class Branch {
 
     public static Branch parseCurrent(Repo repo) {
         try {
-            return parseAll(repo).stream().filter(b -> {
+            return parseAll(repo, false).stream().filter(b -> {
                 try {
-                    return b.id.equals(repo.repository.getBranch());
+                    return b.name.equals(repo.repository.getFullBranch()) || b.id.equals(repo.repository.getFullBranch());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 return false;
             }).findAny().get();
         } catch (Exception e) {
@@ -56,11 +55,10 @@ public class Branch {
 
     public static Branch parseByName(Repo repo, String name) {
         try {
-            return parseAll(repo).stream().filter(b -> b.name.equals(name)).findAny().get();
+            return parseAll(repo, false).stream().filter(b -> b.name.equals(name)).findAny().get();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
