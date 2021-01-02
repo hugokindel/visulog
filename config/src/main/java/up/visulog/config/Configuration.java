@@ -1,45 +1,43 @@
 package up.visulog.config;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
+import up.visulog.gitrawdata.Author;
+import up.visulog.gitrawdata.Branch;
+import up.visulog.gitrawdata.Repo;
+
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represent configuration from a git command and some plugins.
  */
 public class Configuration {
+    public final Repo repo;
 
-    /**
-     * Used git command.
-     */
-    private final Path gitPath;
-    /**
-     * Plugins used by the git command.
-     */
-    private final List<String> plugins;
+    public final Branch branch;
 
-    /**
-     * Creates a new configuration.
-     * @param gitPath Used git command.
-     * @param plugins Plugin used by the git command.
-     */
-    public Configuration(Path gitPath, List<String> plugins) {
-        this.gitPath = gitPath;
-        this.plugins = List.copyOf(plugins);
-    }
+    public final List<Author> aliases;
 
-    /**
-     * @return Return the used git command
-     */
-    public Path getGitPath() {
-        return gitPath;
-    }
+    public final List<String> pluginNames;
 
-    /**
-     * @return Return plugin used by the git command.
-     */
-    public List<String> getPluginNames() {
-        return plugins;
+    public final Date start;
+
+    public final Date end;
+
+    public final List<String> mailBlacklist;
+
+    public final List<String> mailWhitelist;
+
+    public final String format;
+
+    public Configuration(Repo repo, Branch branch, List<Author> aliases, List<String> pluginNames, Date start, Date end, List<String> mailBlacklist, List<String> mailWhitelist, String format) {
+        this.repo = repo;
+        this.branch = branch;
+        this.aliases = aliases;
+        this.pluginNames = List.copyOf(pluginNames);
+        this.start = start;
+        this.end = end;
+        this.mailBlacklist = mailBlacklist;
+        this.mailWhitelist = mailWhitelist;
+        this.format = format;
     }
 }

@@ -130,8 +130,8 @@ public class Webgen {
             }
             res.append("]\n}\n]\n});\n");
             res.append("chart").append(results.getPluginName().replace(" ", "")).append(i).append(".render();\n");
-            i++;
          }
+         i++;
       }
       return res.toString();
    }

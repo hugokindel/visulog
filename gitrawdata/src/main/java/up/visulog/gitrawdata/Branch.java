@@ -4,42 +4,78 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.lib.Ref;
 import java.io.File;
-import java.nio.file.Path;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Branch {
+    public final Ref branch;
+    public final Repo repo;
     public final String id;
     public final String name;
 
-    public Branch(String id, String name ){
+    public Branch(Repo repo, Ref branch, String id, String name) {
+        this.repo = repo;
+        this.branch = branch;
         this.id = id;
-        this.name=name;
-
+        this.name = name;
     }
-    public static List<Branch> parseAllBranchFromRepository(Path gitPath) {
+
+    public static List<Branch> parseAll(Repo repo) {
         try {
-            Git git = Git.open(new File(gitPath.toAbsolutePath().toString())) ;
-            List<Ref> call = git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call();
-            List<Branch> branch = new ArrayList<>();
-            for (Ref ref : call) {
-                branch.add(revBranchToBranch(ref));
+            List<Branch> branches = new ArrayList<>();
+
+            for (Ref ref : repo.git.branchList().setListMode(ListBranchCommand.ListMode.REMOTE).call()) {
+                branches.add(parseFromJGit(repo, ref));
             }
-            return branch;
+            return branches;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
 
-    private static Branch revBranchToBranch(Ref ref) {
+    public static Branch parseCurrent(Repo repo) {
+        try {
+            return parseAll(repo).stream().filter(b -> {
+                try {
+                    return b.id.equals(repo.repository.getBranch());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return false;
+            }).findAny().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static Branch parseByName(Repo repo, String name) {
+        try {
+            return parseAll(repo).stream().filter(b -> b.name.equals(name)).findAny().get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static Branch parseFromJGit(Repo repo, Ref ref) {
         var  id = ref.getObjectId().getName();
         var name = ref.getName();
-        return new Branch(id , name);
+        return new Branch(repo, ref, id, name);
     }
-    public String toString(){
+
+    @Override
+    public String toString() {
         return "Branch{" +
-                "id='" + id + '\'' +
+                "branch=" + branch +
+                ", repo=" + repo +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
