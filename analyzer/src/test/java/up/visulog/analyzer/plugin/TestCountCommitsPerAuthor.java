@@ -2,7 +2,6 @@ package up.visulog.analyzer.plugin;
 
 import org.junit.Test;
 import up.visulog.gitrawdata.Commit;
-import up.visulog.gitrawdata.CommitBuilder;
 import java.util.ArrayList;
 import java.util.List;
 

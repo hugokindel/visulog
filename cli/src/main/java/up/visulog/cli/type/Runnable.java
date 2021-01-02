@@ -7,6 +7,7 @@ import up.visulog.cli.util.Parser;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public abstract class Runnable {
     /** Option to show the help message. */
@@ -46,7 +47,7 @@ public abstract class Runnable {
      * @param classWithArgs The child's class.
      * @param <T> The type of the child class.
      */
-    protected <T extends Runnable> void readArguments(String[] args, Class<T> classWithArgs) {
+    protected <T extends Runnable> boolean readArguments(String[] args, Class<T> classWithArgs) {
         ArrayList<Field> fields = new ArrayList<>(Arrays.asList(Runnable.class.getDeclaredFields()));
         fields.addAll(Arrays.asList(classWithArgs.getDeclaredFields()));
         fields.removeIf(field -> !field.isAnnotationPresent(Option.class));
@@ -70,6 +71,11 @@ public abstract class Runnable {
                                 field.setAccessible(true);
                                 if (field.getType() == boolean.class) {
                                     field.set(this, true);
+                                } else if (parts.length == 1) {
+                                    System.out.println("Option '" + name + "' called with no values when one was expected (please use the -h command).");
+                                    return false;
+                                } else if (field.getType() == Function.class) {
+                                    ((Function<String, Void>)field.get(this)).apply(parts[1]);
                                 } else {
                                     field.set(this, Parser.parse(parts[1], field.getType()));
                                 }
@@ -101,6 +107,8 @@ public abstract class Runnable {
         if (showVersion) {
             displayVersion(classWithArgs);
         }
+
+        return true;
     }
 
     /**

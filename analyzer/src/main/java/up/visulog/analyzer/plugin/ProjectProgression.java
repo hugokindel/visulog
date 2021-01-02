@@ -4,9 +4,9 @@ import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerShape;
 import up.visulog.analyzer.ChartTypes;
 import up.visulog.config.Configuration;
+import up.visulog.gitrawdata.Author;
 import up.visulog.gitrawdata.Commit;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 
 public class ProjectProgression implements AnalyzerPlugin {
@@ -26,8 +26,8 @@ public class ProjectProgression implements AnalyzerPlugin {
         gitLog.sort(Comparator.comparing((Commit c) -> c.date));
 
         for (var commit : gitLog) {
-            var nb = result.resultsMap.getOrDefault(commit.date, 0);
-            result.resultsMap.put(commit.date, nb + 1);
+            var nb = result.resultsMap.getOrDefault(commit.getFormattedDate(), 0);
+            result.resultsMap.put(commit.getFormattedDate(), nb + 1);
         }
 
         return result;
@@ -35,7 +35,7 @@ public class ProjectProgression implements AnalyzerPlugin {
 
     @Override
     public void run() {
-        this.result = processLog(Commit.parseAllFromRepository(configuration.getGitPath()));
+        this.result = processLog(Objects.requireNonNull(Commit.parseAllFromBranch(configuration.branch, configuration.start, configuration.end, configuration.aliases, configuration.mailBlacklist, configuration.mailWhitelist, configuration.format)));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ProjectProgression implements AnalyzerPlugin {
 
 
         Result() {
-            super("ProjectProgression", ChartTypes.SPLINE_AREA);
+            super("Project progression", ChartTypes.SPLINE_AREA);
         }
 
         @Override
@@ -55,7 +55,7 @@ public class ProjectProgression implements AnalyzerPlugin {
 
         @Override
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div>ProjectProgression : \n <ul>\n");
+            StringBuilder html = new StringBuilder("<div>Project progression: \n <ul>\n");
             int a = 0;
             int max = -1;
             String maxDate = null;
@@ -68,6 +68,7 @@ public class ProjectProgression implements AnalyzerPlugin {
                 }
                 s= item.getKey();
             }
+
             html.append("<li> Date of last modification: ").append(s).append("</li>\n");
             html.append("<li> Number of all commits: ").append(a).append("</li>\n");
             html.append("<li> Date when there were the most commits: ").append(maxDate).append("</li>\n");

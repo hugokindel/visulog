@@ -50,12 +50,11 @@ public class Analyzer {
     public AnalyzerResult computeResults() {
         List<AnalyzerPlugin> plugins = new ArrayList<>();
 
-        for (var pluginName : config.getPluginNames()) {
+        for (var pluginName : config.pluginNames) {
             Optional<AnalyzerPlugin> plugin = makePlugin(pluginName);
             plugin.ifPresent(plugins::add);
         }
 
-        // TODO: Option to specify the number of threads to use as a maximum.
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         List<Callable<Object>> tasks = new ArrayList<>(plugins.size());
 
