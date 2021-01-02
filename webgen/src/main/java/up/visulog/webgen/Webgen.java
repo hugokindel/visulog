@@ -39,7 +39,7 @@ public class Webgen {
    */
 
 
-   public void getFile(Path gitPath, boolean open, String[] cssToAdd) {
+   public void getFile(Path gitPath, boolean open, String[] cssToAdd, String title) {
       try {
          Head<Html<HtmlView>> head = StaticHtml
                  .view()
@@ -56,7 +56,7 @@ public class Webgen {
 
          HtmlView view =
                  head
-                         .title().text(this.pluginNames.toString()).__()
+                         .title().text(title.isEmpty() ? "visulog - " + pluginNames.toString() : title).__()
                          .script().attrSrc("js/canvasjs.min.js").__()
                          .__() //head
                          .body()
