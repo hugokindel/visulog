@@ -2,13 +2,22 @@ package up.visulog.analyzer;
 
 import up.visulog.config.Configuration;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 /**
@@ -86,4 +95,53 @@ public class Analyzer {
     public Configuration getConfig() {
         return config;
     }
+
+    // Modified version of this code for our own needs: https://stackoverflow.com/a/7461653
+    public static ArrayList<String> getPluginsList() {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL packageURL;
+        ArrayList<String> names = new ArrayList<String>();;
+
+        String packageName = "up/visulog/analyzer/plugin";
+        packageURL = classLoader.getResource(packageName);
+
+        try {
+            if (packageURL.getProtocol().equals("jar")) {
+                String jarFileName = URLDecoder.decode(packageURL.getFile(), StandardCharsets.UTF_8);
+                jarFileName = jarFileName.substring(5,jarFileName.indexOf("!"));
+                JarFile jarFile = new JarFile(jarFileName);
+                Enumeration<JarEntry> jarEntries = jarFile.entries();
+
+                while (jarEntries.hasMoreElements()) {
+                    String entryName = jarEntries.nextElement().getName();
+
+                    if(entryName.startsWith(packageName) && entryName.length()>packageName.length()+5){
+                        entryName = entryName.substring(packageName.length(),entryName.lastIndexOf('.'));
+
+                        if (!entryName.contains("$Result")) {
+                            names.add(entryName.replace("/", ""));
+                        }
+                    }
+                }
+            } else {
+                URI uri = new URI(packageURL.toString());
+                File folder = new File(uri.getPath());
+                File[] content = folder.listFiles();
+                String entryName;
+
+                for (File actual: content) {
+                    entryName = actual.getName();
+                    entryName = entryName.substring(0, entryName.lastIndexOf('.'));
+                    names.add(entryName);
+                }
+            }
+
+            return names;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
