@@ -59,7 +59,6 @@ canvas {
     display: flex;
     height: 350px;
     flex-direction: column;
-    justify-content: center;
     position: relative;
     margin: 30px;
     padding: 25px;

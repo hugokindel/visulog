@@ -1,32 +1,47 @@
 package up.visulog.analyzer.plugin;
-
 import up.visulog.analyzer.AnalyzerPlugin;
 import up.visulog.analyzer.AnalyzerShape;
 import up.visulog.analyzer.ChartTypes;
 import up.visulog.config.Configuration;
+import up.visulog.gitrawdata.Author;
+import up.visulog.gitrawdata.Branch;
 import up.visulog.gitrawdata.Commit;
 
 import java.util.*;
 
-public class TypeOfProgression implements AnalyzerPlugin {
+public class NumberOfContributors implements AnalyzerPlugin {
 
     private final Configuration configuration;
 
     private Result result;
 
-    public TypeOfProgression(Configuration generalConfiguration) {
+    public NumberOfContributors(Configuration generalConfiguration) {
         this.configuration = generalConfiguration;
     }
 
     static Result processLog(List<Commit> gitLog) {
-        var result = new Result();
+        var result = new NumberOfContributors.Result();
 
-        gitLog.sort(Comparator.comparing(o -> o.date.getTime()));
-        int i = 1;
+        gitLog.sort(Comparator.comparing((Commit c) -> c.date));
+
+
+        List<Author> authors = new ArrayList<>();
+
         for (var commit : gitLog) {
-            result.resultsMap.put(commit.getFormattedDate(), i);
-            i++;
+            boolean anyMatch = false;
+
+            for (Author author : authors) {
+                if (author.mails.stream().anyMatch(commit.author::is)) {
+                    anyMatch = true;
+                }
+            }
+
+            if (!anyMatch) {
+                authors.add(commit.author);
+            }
         }
+
+        result.resultsMap.put("result", authors.size());
 
         return result;
     }
@@ -41,11 +56,11 @@ public class TypeOfProgression implements AnalyzerPlugin {
         if (result == null) run();
         return result;
     }
+
     static class Result extends AnalyzerShape implements AnalyzerPlugin.Result{
 
-
         Result() {
-            super("Type of project progression", ChartTypes.AREA);
+            super("Number of contributors", ChartTypes.POUBELLE);
         }
 
         @Override
@@ -53,31 +68,13 @@ public class TypeOfProgression implements AnalyzerPlugin {
 
         @Override
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div>Type of project progression: \n <ul>\n");
-            int a = 0;
-            int max = -1;
-            String maxDate = null;
-            String s="";
-            for (var item : this.resultsMap.entrySet()) {
-                a = item.getValue();
-                if (item.getValue() > max) {
-                    max = item.getValue();
-                    maxDate = item.getKey();
-                }
-                s= item.getKey();
-            }
-            html.append("<li> Date of last modification: ").append(s).append("</li>\n");
-            html.append("<li> Number of all commits: ").append(a).append("</li>\n");
-            html.append("</ul>\n</div>\n");
-
-            return html.toString();
+            return "<div>Number of contributors: " + this.resultsMap.entrySet().iterator().next().getValue() + "\n</div>";
         }
 
         @Override
         public Map<String, Integer> getResults() {
             return this.resultsMap;
         }
-
 
         @Override
         public String getPluginName() {
@@ -91,5 +88,4 @@ public class TypeOfProgression implements AnalyzerPlugin {
 
 
     }
-
 }

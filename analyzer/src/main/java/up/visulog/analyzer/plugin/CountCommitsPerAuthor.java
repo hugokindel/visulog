@@ -41,8 +41,8 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
         var result = new Result();
 
         for (var commit : gitLog) {
-            var nb = result.resultsMap.getOrDefault(commit.author, 0);
-            result.resultsMap.put(commit.author, nb + 1);
+            var nb = result.resultsMap.getOrDefault(commit.author.getPrimaryName(), 0);
+            result.resultsMap.put(commit.author.getPrimaryName(), nb + 1);
         }
 
         return result;
@@ -51,7 +51,7 @@ public class CountCommitsPerAuthor implements AnalyzerPlugin {
     /** Run this analyzer plugin. */
     @Override
     public void run() {
-        result = processLog(Objects.requireNonNull(Commit.parseAllFromRepository(configuration.getGitPath())));
+        this.result = processLog(Objects.requireNonNull(Commit.parseAllFromBranch(configuration.branch, configuration.start, configuration.end, configuration.aliases, configuration.mailBlacklist, configuration.mailWhitelist, configuration.format)));
     }
 
     /** @return the result of this analysis. Runs the analysis first if not already done. */

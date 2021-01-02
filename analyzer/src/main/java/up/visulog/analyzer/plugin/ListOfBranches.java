@@ -6,31 +6,34 @@ import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Branch;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class BranchPlugin implements AnalyzerPlugin {
+public class ListOfBranches implements AnalyzerPlugin {
 
     private final Configuration configuration;
 
     private Result result;
 
-    public BranchPlugin(Configuration generalConfiguration) {
+    public ListOfBranches(Configuration generalConfiguration) {
         this.configuration = generalConfiguration;
     }
-
 
     static Result processLog(List<Branch> gitLog) {
         var result = new Result();
         int i=0;
         for (var branch : gitLog) {
-            result.resultsMap.put(branch.name.substring(20) + " --- ID: "+branch.id.substring(0,8),i);
+            if (!branch.name.equals("HEAD") && !branch.name.endsWith("/HEAD")) {
+                result.resultsMap.put(branch.name.substring(20) + " --- ID: " + branch.id.substring(0, 8), i);
+            }
             i++;
         }
 
         return result;
     }
+
     @Override
     public void run() {
-        this.result = processLog(Branch.parseAllBranchFromRepository(configuration.getGitPath()));
+        this.result = processLog(Objects.requireNonNull(Branch.parseAll(configuration.repo)));
     }
 
     @Override
@@ -42,7 +45,7 @@ public class BranchPlugin implements AnalyzerPlugin {
     static class Result extends AnalyzerShape implements AnalyzerPlugin.Result{
 
         Result() {
-            super("BranchPlugin", ChartTypes.POUBELLE);
+            super("List of branches", ChartTypes.POUBELLE);
         }
 
         @Override
@@ -50,7 +53,7 @@ public class BranchPlugin implements AnalyzerPlugin {
 
         @Override
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div>List of Branch : \n <ul>\n");
+            StringBuilder html = new StringBuilder("<div>List of branches (not ordered): \n<ul>\n");
 
             for (var item : this.resultsMap.entrySet())
                 html.append("<li>").append(item.getKey()).append("</li>\n");

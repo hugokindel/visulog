@@ -23,8 +23,8 @@ public class CountFilesChangedPerAuthor implements AnalyzerPlugin {
         var result = new Result();
 
         for (var commit : gitLog) {
-            var nb = result.resultsMap.getOrDefault(commit.author, 0);
-            result.resultsMap.put(commit.author, nb + commit.numberOfFilesChanged);
+            var nb = result.resultsMap.getOrDefault(commit.author.getPrimaryName(), 0);
+            result.resultsMap.put(commit.author.getPrimaryName(), nb + commit.numberOfFilesChanged);
         }
 
         return result;
@@ -32,7 +32,7 @@ public class CountFilesChangedPerAuthor implements AnalyzerPlugin {
 
     @Override
     public void run() {
-        result = processLog(Objects.requireNonNull(Commit.parseAllFromRepository(configuration.getGitPath())));
+        this.result = processLog(Objects.requireNonNull(Commit.parseAllFromBranch(configuration.branch, configuration.start, configuration.end, configuration.aliases, configuration.mailBlacklist, configuration.mailWhitelist, configuration.format)));
     }
 
     @Override
