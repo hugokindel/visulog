@@ -83,12 +83,11 @@ public class Webgen {
          String filename = "visulog-result-" + new SimpleDateFormat("yyyy_MM_dd-HH-mm").format(new Date()) + ".html";
          String filepath = System.getProperty("user.dir") + "/" + filename;
          PrintWriter p = new PrintWriter(filepath);
-
          p.write(html);
          p.close();
 
          if (open) {
-            Desktop.getDesktop().open(new File(fileName));
+            Desktop.getDesktop().open(new File(filepath));
          }
 
          if (getResult) {
