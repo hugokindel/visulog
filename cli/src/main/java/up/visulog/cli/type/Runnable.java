@@ -52,8 +52,7 @@ public abstract class Runnable {
         fields.addAll(Arrays.asList(classWithArgs.getDeclaredFields()));
         fields.removeIf(field -> !field.isAnnotationPresent(Option.class));
 
-
-        if (args.length == 0) {
+        if (args.length == 0 || (args.length == 1 && !args[0].startsWith("-"))) {
             showHelp = true;
         }
 
