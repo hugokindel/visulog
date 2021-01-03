@@ -1,5 +1,7 @@
 package up.visulog.cli.util;
 
+import java.util.function.Function;
+
 /** This is a parser for options with value passed through the cli. */
 public class Parser {
     /**

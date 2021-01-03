@@ -6,7 +6,6 @@ import up.visulog.analyzer.ChartTypes;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,8 +39,8 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
       var result = new Result();
 
       for (var commit : gitLog) {
-         var nb = result.resultsMap.getOrDefault(commit.mail, 0);
-         result.resultsMap.put(commit.mail, nb + 1);
+         var nb = result.resultsMap.getOrDefault(commit.author.getPrimaryMail(), 0);
+         result.resultsMap.put(commit.author.getPrimaryMail(), nb + 1);
       }
 
       return result;
@@ -49,7 +48,7 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
 
    @Override
    public void run() {
-      this.result = processLog(Objects.requireNonNull(Commit.parseAllFromRepository(configuration.getGitPath())));
+      this.result = processLog(Objects.requireNonNull(Commit.parseAllFromBranch(configuration.branch, configuration.start, configuration.end, configuration.aliases, configuration.mailBlacklist, configuration.mailWhitelist, configuration.format)));
    }
 
    /** */
