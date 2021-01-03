@@ -48,6 +48,7 @@ public class Webgen {
                  .head()
                  .meta().attrCharset("UTF-8").__()
                  .title().text(title.isEmpty() ? "visulog - " + pluginNames.toString() : title).__()
+                 .link().attrRel(EnumRelType.ICON).attrHref(getResourceFileAsString("visulog.b64")).__()
                  .style().text(getResourceFileAsString("style.css")).__();
 
          if (cssToAdd != null) {
@@ -59,7 +60,7 @@ public class Webgen {
          HtmlView view = head.__() //head
                          .body()
                          .header().attrClass("head")
-                         .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").img().attrSrc(getResourceFileAsString("gitlab.b64")).__().__()
+               .a().attrHref("https://gaufre.informatique.univ-paris-diderot.fr/hugokindel/visulog").attrTarget("_blank").img().attrSrc(getResourceFileAsString("gitlab.b64")).attrStyle("height: 4vh; width: 4.5vh").__().__()
                          .span().text("VISULOG").__()
                          .div().attrClass("phantomDiv").__()
                          .__() // header
