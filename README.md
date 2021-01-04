@@ -76,7 +76,7 @@ For most of the examples, we are going to imagine that we are using a binary dis
 `cli -v`
 
 **To use all plugins:**  
-`cli --plugins=CountCommitsPerAuthor,CountCommitsPerMail,CountFilesChangedPerAuthor,CountFilesChangedPerMail,CountLinesAddedPerAuthor,CountLinesAddedPerMail,CountLinesRemovedPerAuthor,CountLinesRemovedPerMail,ListOfBranches,ProjectProgression,TypeOfProgression,CountMergeCommitsPerAuthor,CountMergeCommitsPerMail`
+Take the list resulted by `cli --list-plugins` and pass it to `cli --plugins=the-resulted-list`.
 
 **To specify a start and/or end date (meaning only commits within these dates will be analyzed):**  
 `cli --plugins=CountCommitsPerAuthor --start=01/12/2020 --end=31/12/2020`
