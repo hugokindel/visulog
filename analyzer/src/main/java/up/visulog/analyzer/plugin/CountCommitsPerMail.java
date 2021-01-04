@@ -75,7 +75,7 @@ public class CountCommitsPerMail implements AnalyzerPlugin {
       /** @return the result of the analysis but as an html div. */
       @Override
       public String getResultAsHtmlDiv() {
-         StringBuilder html = new StringBuilder("<div>Commits per mail : \n<ul>\n");
+         StringBuilder html = new StringBuilder("<div>Commits per mail: \n<ul>\n");
 
          for (var item : this.resultsMap.entrySet())
             html.append("<li>").append(item.getKey()).append(": ").append(item.getValue()).append("</li>\n");
