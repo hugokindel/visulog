@@ -18,7 +18,7 @@ Outils permettant d'analyser et visualiser les logs des dépôts gits.
 ### Dates majeurs
 
 - Création du projet le **15 septembre**.
-- Deadline final le **6 janvier**.
+- Deadline final le **5 janvier**.
 
 ### Librairies à utiliser
 
@@ -35,17 +35,17 @@ Révision des semaines 1 et 2
 
 ### Travail effectué
 
-- Analyse du code d'origine (les fichiers sont maintenant tous documentés pour plus de précisions):
-	- analyser - @hugokindel:
+- Analyse du code d'origine (les fichiers sont maintenant tous documentés pour plus de précisions) :
+	- analyser - @hugokindel :
 		- Analyse le contenu des logs git à l'aide de config et gitrawdata, et permet d'obtenir le résultat.
-	- cli - @jauroyon:
+	- cli - @jauroyon :
 		- Contient le *main* principale, possède le système d'options et exécute l'analyser à l'aide de ceux-ci.
-	- config - @clipal:
+	- config - @clipal :
 		- Possède des classes de configurations pour aider l'analyser et cli.
-	- gitrawdata - @somon:
+	- gitrawdata - @somon :
 		- Possède des classes de données correspondant aux éléments de git pour pouvoir les traiter.
 - Gestion d'un bug empêchant la compilation (problème d'Unicode)
-- Issues réalisés (merge requests correspondantes fermés):
+- Issues réalisés (merge requests correspondantes fermés) :
 	- #2 - @hugokindel
 	- #9 - @somon
 	- #14 - @clipal
@@ -67,7 +67,7 @@ Révision des semaines 3 et 4
 
 ### Travail effectué
 
-- Issues réalisés (merge requests correspondantes fermés):
+- Issues réalisés (merge requests correspondantes fermés) :
 	- #4 - @hugokindel
 	- #17 - @allano
 	- #3 - @hugokindel
@@ -75,7 +75,7 @@ Révision des semaines 3 et 4
 	- #10 - @somon
 	- #11 - @somon
 	- #12 - @mohamedc
-- Issues en cours de réalisation:
+- Issues en cours de réalisation :
 	- #16 - @hugokindel @jauroyon
 
 ### Rétrospective des problèmes rencontrés
@@ -95,7 +95,7 @@ Révision des semaines 5 et 6
 
 ### Travail effectué
 
-- Issues réalisés (merge requests correspondantes fermés):
+- Issues réalisés (merge requests correspondantes fermés) :
 	- #16 - @jauroyon @hugokindel
 	- #21 - @jauroyon
 	- #15 - @clipal @hugokindel
@@ -103,7 +103,7 @@ Révision des semaines 5 et 6
 	- #8 - @allano
 	- #22 - @mohamedc
 	- #6 - @mohamedc
-- Issues en cours de réalisation:
+- Issues en cours de réalisation :
 	- #18 - @clipal @payet @allano @somon
 
 ### Rétrospective des problèmes rencontrés
@@ -121,7 +121,7 @@ Révision des semaines 7 et 8
 
 ### Travail effectué
 
-- Issues réalisés (merge requests correspondantes fermés):
+- Issues réalisés (merge requests correspondantes fermés) :
 	- #24 - @somon
 	- #30 - @mohamedc
 	- #31 - @hugokindel
@@ -131,7 +131,7 @@ Révision des semaines 7 et 8
 	- #27 - @somon @payet @clipal @allano
 	- #18 - @somon @payet @clipal @allano
 	- #33 - @somon
-- Issues en cours de réalisation:
+- Issues en cours de réalisation :
 	- #28 - @hugokindel @mohamedc
 	- #29 - @jauroyon
 - À réaliser:
@@ -152,16 +152,16 @@ Révision des semaines 9 et 10
 
 ### Travail effectué
 
-- Issues réalisés (merge requests correspondantes fermés):
+- Issues réalisés (merge requests correspondantes fermés) :
 	- #25 - @hugokindel
 	- #34 - @clipal @payet
 	- #28 - @mohamedc @jauroyon
 	- #39 - @payet
 	- #42 - @somon
 	- #41 - supprimé
-- Issues en cours de réalisation:
+- Issues en cours de réalisation :
 	- #43 - @hugokindel @allano
-- À réaliser:
+- À réaliser :
 	- #36 @all
 	- #37 @all
 	- #38 @all
@@ -173,3 +173,29 @@ Révision des semaines 9 et 10
 ### Planification des semaines à venir
 
 - Finaliser le projet en ajoutant des fonctionnalités toujours dans le but de répondre à des user-stories.
+
+## Réunion du 4 janvier 2021 (fin de projet)
+
+- Issues réalisés (merge requests correspondantes fermés) :
+	- #46 - @jauroyon
+	- #35 - @allano
+	- #49 - @hugokindel
+	- #43 - @allano
+	- #48 - @mohamedc
+	- #47 - @jauroyon
+	- #29 - @jauroyon @hugokindel
+	- #40 - @clipal @payet
+	- #51 - @hugokindel @jauroyon @mohamedc
+	- #45 - @somon @hugokindel
+	- #53 - @hugokindel
+	- #52 - @mohamedc @payet
+	- #55 - @somon
+	- #54 - @mohamedc
+	- #56 - @clipal
+	- #57 - @clipal
+	- #58 - @payet
+- Fermés :
+	- #19 (issue générale, sans code).
+	- #50 (issue non utilisé)
+- Fermés car idée abandonnée :
+	- #44
